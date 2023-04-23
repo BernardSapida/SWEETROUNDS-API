@@ -1,5 +1,6 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Contact.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -7,21 +8,17 @@
 
         // Decode the JSON data into an associative array
         $data = json_decode($postData, true);
+        $contact = new Contact();
 
         // Process the data
-        $user = new User();
-        $current_user = $user::loadById($data["id"]);
+        $contact->setName($data["name"]);
+        $contact->setEmail($data["email"]);
+        $contact->setSubject($data["subject"]);
+        $contact->setMessage($data["message"]);
+        $contact->save();
 
-        if($current_user) {
-            // Delete user account
-            $current_user->delete();
-
-            // Send a response
-            echo sendResponse(true, 'Successfully deleted an account!');
-        } else {
-            // Send a response
-            echo sendResponse(false, 'Account to delete doesn\'t exist!');
-        }
+        // Send a response
+        echo sendResponse(true, 'Successfully sent a message!');
     }
 
     function sendResponse($success, $message) {

@@ -1,5 +1,4 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../")."/utils/validation/create_user.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
     
@@ -14,13 +13,22 @@
         $user = new User();
         $current_user = $user::loadById($data["id"]);
 
-        $current_user->setFullname($data['firstname'] . " " . $data['lastname']);
-        $current_user->setEmail($data['email']);
-        $user->save();
+        if($current_user) {
+            $current_user->setFullname(($data['firstname']) . " " . $data['lastname']);
+            $current_user->setEmail($data['email'] == "" ? $current_user->getEmail() : $data['email']);
+            $current_user->save();
 
-        // Send a response
+            // Send a response
+            echo sendResponse(true, 'Successfully account updated!');
+        } else {
+            // Send a response
+            echo sendResponse(false, 'Successfully account updated!');
+        }
+    }
+
+    function sendResponse($success, $message) {
         header('Content-Type: application/json');
-        $response = array('success' => true, 'message' => 'Successfully account updated!');
-        echo json_encode($response);
+        $response = array('success' => $success, 'message' => $message);
+        return json_encode($response);
     }
 ?>

@@ -121,6 +121,24 @@
             }
         }
 
+        public static function getMessages() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM contact_messages");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // delete the contact message from the database
         public function delete() {
             global $mysqli;

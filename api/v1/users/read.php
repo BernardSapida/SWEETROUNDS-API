@@ -12,12 +12,21 @@
         $user = new User();
         $current_user = $user::loadById($data["id"]);
 
-        // Get user information
-        $userInformation = $current_user->getUserDetails();
+        if($current_user) {
+            // Get user information
+            $userInformation = $current_user->getUserDetails();
 
-        // Send a response
+            // Send a response
+            echo sendResponse(true, 'Account details retrieve successfully!', $userInformation);
+        } else {
+            // Send a response
+            echo sendResponse(false, 'Account details doesn\'t exist!');
+        }
+    }
+
+    function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => true, 'message' => 'Successfully created a new account!', 'data' => $userInformation);
-        echo json_encode($response);
+        $response = array('success' => $success, 'message' => $message, "data" => $data);
+        return json_encode($response);
     }
 ?>

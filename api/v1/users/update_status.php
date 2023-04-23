@@ -1,4 +1,5 @@
 <?php
+    require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,14 +14,16 @@
         $current_user = $user::loadById($data["id"]);
 
         if($current_user) {
-            // Delete user account
-            $current_user->delete();
+            $status = $data['status'] == "" ? $current_user->getStatus() : $data['status'];
 
+            $current_user->setStatus($status);
+            $current_user->save();
+    
             // Send a response
-            echo sendResponse(true, 'Successfully deleted an account!');
+            echo sendResponse(true, 'Successfully status updated!');
         } else {
             // Send a response
-            echo sendResponse(false, 'Account to delete doesn\'t exist!');
+            echo sendResponse(false, 'User account didn\'t exist!');
         }
     }
 

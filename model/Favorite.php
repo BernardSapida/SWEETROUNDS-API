@@ -99,6 +99,24 @@
             }
         }
 
+        public static function getFavorites() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM favorites");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // delete the favorite from the database
         public function delete() {
             global $mysqli;

@@ -187,6 +187,26 @@
             }
         }
 
+        // get user order list
+        public static function getUserOrders($userId) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM orders WHERE user_id=?");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+ 
         // delete the order from the database
         public function delete() {
             global $mysqli;

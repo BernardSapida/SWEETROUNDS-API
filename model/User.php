@@ -1,6 +1,6 @@
 <?php
-    require_once dirname(__DIR__)."/utils/database.php";
-    require_once dirname(__DIR__)."/helper/hash.php";
+    require_once realpath(dirname(__FILE__) . "/../")."/utils/database.php";
+    require_once realpath(dirname(__FILE__) . "/../")."/helpers/hash.php";
 
     class User {
         private $id;
@@ -62,7 +62,7 @@
             $this->id = $id;
         }
 
-        public function setfullname($fullname) {
+        public function setFullname($fullname) {
             $this->fullname = $fullname;
         }
 
@@ -89,8 +89,8 @@
 
             // if the user has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE users SET fullname=?, email=?, password=?, auth_provider=?, status->? WHERE id=?");
-                $stmt->bind_param("sssss", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->status, $this->id);
+                $stmt = $mysqli->prepare("UPDATE users SET fullname=?, email=?, password=?, auth_provider=?, status=? WHERE id=?");
+                $stmt->bind_param("sssssi", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->status, $this->id);
             }
 
             // otherwise, insert a new record for the user
@@ -132,6 +132,25 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        // get user list
+        public static function getUsers() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM users");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // delete the user from the database

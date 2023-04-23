@@ -1,5 +1,6 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Favorite.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -7,21 +8,15 @@
 
         // Decode the JSON data into an associative array
         $data = json_decode($postData, true);
+        $favorite = new Favorite();
 
         // Process the data
-        $user = new User();
-        $current_user = $user::loadById($data["id"]);
+        $favorite->setItems($data["items"]);
+        $favorite->setUserId($data["user_id"]);
+        $favorite->save();
 
-        if($current_user) {
-            // Delete user account
-            $current_user->delete();
-
-            // Send a response
-            echo sendResponse(true, 'Successfully deleted an account!');
-        } else {
-            // Send a response
-            echo sendResponse(false, 'Account to delete doesn\'t exist!');
-        }
+        // Send a response
+        echo sendResponse(true, 'Successfully sent a message!');
     }
 
     function sendResponse($success, $message) {
