@@ -142,14 +142,14 @@
 
             // if the order has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, payment_status=?, user_id=?, order_id=? WHERE id=?");
-                $stmt->bind_param("isiii", $this->order_number, $this->payment_status, $this->user_id, $this->order_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, order_id=? WHERE id=?");
+                $stmt->bind_param("issiiiissiii", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_id, $this->id);
             }
 
             // otherwise, insert a new record for the order
             else {
-                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, payment_status, user_id, order_id) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("isii", $this->order_number, $this->payment_status, $this->user_id, $this->order_id);
+                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_id) VALUES (?, ?, ?, ?)");
+                $stmt->bind_param("issiiiissii", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_id);
             }
 
             // execute the prepared statement
@@ -168,14 +168,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, order_number, payment_status, user_id, order_id FROM orders WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_id FROM orders WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $order_number, $payment_status, $user_id, $order_id);
+            $stmt->bind_result($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_id);
 
             // if the query returned a result, create and return a Order History object
             if ($stmt->fetch()) {
-                $order = new OrderHistory($id, $order_number, $payment_status, $user_id, $order_id);
+                $order = new OrderHistory($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_id);
                 $stmt->close();
                 return $order;
             }
