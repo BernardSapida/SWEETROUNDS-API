@@ -1,6 +1,6 @@
 <?php
-    require "../util/validation/create_user.php";
-    require "../util/database.php";
+    require "../utils/validation/create_user.php";
+    require "../utils/database.php";
     require "../helper/hash.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
