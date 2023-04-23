@@ -1,7 +1,7 @@
 <?php
     require_once dirname(__DIR__)."/utils/database.php";
 
-    class Favorite {
+    class Cart {
         private $id;
         private $items;
         private $user_id;
@@ -26,14 +26,14 @@
             return $this->user_id;
         }
 
-        public function getFavoritesDetail() {
-            $favorites = array(
+        public function getCartDetails() {
+            $cart = array(
                 "id" => $this->id, 
                 "items" => $this->items, 
                 "user_id" => $this->user_id, 
             );
 
-            return $favorites;
+            return $cart;
         }
 
         public function setId($id) {
@@ -48,26 +48,26 @@
             $this->user_id = $user_id;
         }
         
-        // save the favorite to the database
+        // save the cart to the database
         public function save() {
             global $mysqli;
 
-            // if the favorite has an ID, update their record in the database
+            // if the cart has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE favorites SET items=?, user_id=? WHERE id=?");
+                $stmt = $mysqli->prepare("UPDATE cart_items SET items=?, user_id=? WHERE id=?");
                 $stmt->bind_param("sii", $this->items, $this->user_id, $this->id);
             }
 
-            // otherwise, insert a new record for the favorite
+            // otherwise, insert a new record for the cart
             else {
-                $stmt = $mysqli->prepare("INSERT INTO favorites (items, user_id) VALUES (?, ?)");
+                $stmt = $mysqli->prepare("INSERT INTO cart_items (items, user_id) VALUES (?, ?)");
                 $stmt->bind_param("si", $this->items, $this->user_id);
             }
 
             // execute the prepared statement
             $stmt->execute();
 
-            // set the favorite's ID if they were just inserted
+            // set the cart's ID if they were just inserted
             if (!$this->id) {
                 $this->id = $mysqli->insert_id;
             }
@@ -76,20 +76,20 @@
             $stmt->close();
         }
 
-        // load a favorite from the database by ID
+        // load a cart from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, items, user_id FROM favorites WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT id, items, user_id FROM cart_items WHERE user_id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->bind_result($id, $items, $user_id);
 
-            // if the query returned a result, create and return a Favorite object
+            // if the query returned a result, create and return a Cart object
             if ($stmt->fetch()) {
-                $favorite = new Favorite($id, $items, $user_id);
+                $cart = new Favorite($id, $items, $user_id);
                 $stmt->close();
-                return $favorite;
+                return $cart;
             }
 
             // otherwise, return null
@@ -99,11 +99,11 @@
             }
         }
 
-        // delete the favorite from the database
+        // delete the cart from the database
         public function delete() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("DELETE FROM favorites WHERE id=?");
+            $stmt = $mysqli->prepare("DELETE FROM cart_items WHERE id=?");
             $stmt->bind_param("i", $this->id);
             $stmt->execute();
             $stmt->close();

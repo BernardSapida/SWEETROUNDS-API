@@ -2,7 +2,6 @@
     require_once dirname(__DIR__)."/utils/database.php";
     require_once dirname(__DIR__)."/helper/hash.php";
 
-    // define a class for your data model
     class User {
         private $id;
         private $fullname;
