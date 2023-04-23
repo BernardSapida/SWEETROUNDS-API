@@ -6,9 +6,13 @@
     * products table model
     * contact_messages table model
     * admins table model
-    TODO: order_history table model
-    TODO: orders table model
-    TODO: transactions table model
+    * order_history table model
+    * orders table model
+    * transactions table model
+
+    TODO: Create methods for computing sales report
+    TODO: Insert User Data for each table
+    TODO: Do testing for each endpoints
 
     * Important
     ! Error
