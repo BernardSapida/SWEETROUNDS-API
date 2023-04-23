@@ -1,18 +1,15 @@
 <?php
-    function database_query($sql) {
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $database = "sweetrounds";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "sweetrounds";
 
-        // Create connection
-        $conn = mysqli_connect($servername, $username, $password, $database);
+    // connect to the database
+    $mysqli = new mysqli($servername, $username, $password, $database);
 
-        // Check connection
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-
-        $conn->query($sql);
+    // check connection
+    if ($mysqli->connect_errno) {
+        echo "Failed to connect to MySQL: " . $mysqli->connect_error;
+        exit();
     }
 ?>

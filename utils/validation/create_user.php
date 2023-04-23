@@ -9,7 +9,7 @@
         $auth = $foundAuth ? $data["auth_provider"] : null;
 
         if(!$foundAuth) return "Missing authentication";
-        else if(!validateAuthProvider($auth)) return "Invalid authentication provider";
+        else if(validAuthProvider($auth) != 1) return "Invalid authentication provider";
         else if(!validName($firstname)) return "Firstname must contain only letters and have at least 2 letters";
         else if(!validName($lastname)) return "Lastname must contain only letters and have at least 2 letters";
         else if(!validEmail($email)) return "Invalid email address";
@@ -56,7 +56,7 @@
         return array_key_exists("auth_provider", $data);
     }
 
-    function validateAuthProvider($auth) {
+    function validAuthProvider($auth) {
         $providers = array('credentials', 'google', 'facebook', 'github');
         
         return in_array($auth, $providers);
