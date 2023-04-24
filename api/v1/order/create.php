@@ -22,7 +22,7 @@
         $favorite->setOrderStatus($data["order_status"]);
         $favorite->setPaymentStatus($data["payment_status"]);
         $favorite->setUserId($data["user_id"]);
-        $favorite->setUserInfoId($data["user_info_id"]);
+        $favorite->setUserInfoId($data["order_detail_id"]);
         $favorite->save();
 
         // Send a response
