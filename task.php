@@ -42,9 +42,9 @@
         * Update admin account (Important: Status -> Active/Inactive)
         * Validate admin email and password during signin (status) /admin/authenticate.php
 
-    * Order History model
-        TODO: 
-        ? Should we remove
+    * Report model
+        * Get all transaction of specific admin (cashier)
+        * Get all transaction by day, week, month, and year
 
     * Order model
         * Get all orders (inner join with order_details) /order/list.php
@@ -53,13 +53,16 @@
         * Update order information (order & payment status)
 
     * Transaction model
-        TODO: Get all transactions
-        TODO: Get specific transactions
-        TODO: Create new transaction
-
-    TODO: Create methods for computing sales report (database query, Like: Joins)
-    TODO: Insert User Data for each table
-    TODO: Do testing for each endpoints
+        * Get all transactions /transaction/list.php
+        * Get specific transactions /transaction/read.php
+        * Create new transaction /transaction/create.php
+    
+    TODO: Populate database with data
+    TODO: report for new customer within the week
+    TODO: report for top 10 selling donut and other donuts
+    TODO: report for low stock items quantity <= 20
+    TODO: Website Setting -> tax, accepting_orders
+    TODO: Revenue/Transaction for Online Website
 
     * Important
     ! Error

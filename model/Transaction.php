@@ -135,7 +135,7 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, discount, total, admin_id FROM transactions WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, discount, total, admin_id FROM transactions WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->bind_result($id, $order_number, $items, $note, $tax, $discount, $total, $admin_id);
@@ -152,6 +152,25 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        // get transaction list
+        public static function getTransactions() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM transactions");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // delete the transaction from the database

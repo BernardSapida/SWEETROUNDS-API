@@ -199,7 +199,7 @@
         public static function getOrders() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders inner join order_details on orders.order_detail_id = order_details.id");
+            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -218,7 +218,7 @@
         public static function getUserOrders($userId) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders inner join order_details on orders.order_detail_id = order_details.id WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id WHERE user_id=?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $result = $stmt->get_result();
