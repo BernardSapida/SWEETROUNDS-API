@@ -47,12 +47,10 @@
         ? Should we remove
 
     * Order model
-        TODO: Get all orders
-        TODO: Get orders of signed in users "user_id"
-        TODO: Get orders of signed in users with user informations "LEFT JOIN user_informations"
+        * Get all orders (inner join with order_details) /order/list.php
+        * Get orders of signed in users with order details "LEFT JOIN order_details"
         * Create new orders
-        ? How do we get id in user_information table for creating order
-        TODO: Update order information (order & payment status)
+        * Update order information (order & payment status)
 
     * Transaction model
         TODO: Get all transactions

@@ -183,7 +183,7 @@
 
             // if the query returned a result, create and return a Order History object
             if ($stmt->fetch()) {
-                $order = new OrderHistory($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_detail_id);
+                $order = new Order($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_detail_id);
                 $stmt->close();
                 return $order;
             }
@@ -195,11 +195,30 @@
             }
         }
 
+        // get order list
+        public static function getOrders() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM orders inner join order_details on orders.order_detail_id = order_details.id");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // get user order list
         public static function getUserOrders($userId) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT * FROM orders inner join order_details on orders.order_detail_id = order_details.id WHERE user_id=?");
             $stmt->bind_param("i", $userId);
             $stmt->execute();
             $result = $stmt->get_result();
