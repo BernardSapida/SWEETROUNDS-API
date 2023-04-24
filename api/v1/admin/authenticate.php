@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Admin.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/helpers/hash.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,20 +10,20 @@
         $data = json_decode($postData, true);
 
         // Process the data
-        $user = new User();
-        $current_user = $user::loadByEmail($data["email"]);
+        $admin = new Admin();
+        $current_admin = $admin::loadByEmail($data["email"]);
 
-        if($current_user) {
+        if($current_admin) {
             // Verify user password in database
-            $verifyPassword = verifyPassword($data["password"], $current_user->getPassword());
-
+            $verifyPassword = verifyPassword($data["password"], $current_admin->getPassword());
+            
             if($verifyPassword === true) {
                 // Set status to active
-                $current_user->setStatus('active');
-                $current_user->save();
-
+                $current_admin->setStatus('active');
+                $current_admin->save();
+                
                 // Send a response
-                echo sendResponse(true, 'Successfully signed in!', $current_user->getUserDetails());
+                echo sendResponse(true, 'Successfully signed in!', $current_admin->getAdminDetails());
             } else {
                 // Send a response
                 echo sendResponse(true, 'Password is incorrect!');

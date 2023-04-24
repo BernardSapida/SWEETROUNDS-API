@@ -1,6 +1,7 @@
 /*
     * User model
-        * Create new user
+        * Unique email address
+        * Create new user (with their favorite, user information, cart) /user/create.php
         * Get list of all users /users/list.php
         * Get details of single user /users/read.php
         * Delete a single user account /users/delete.php
@@ -10,36 +11,36 @@
         * Validate user email and password during signin /users/authenticate.php
 
     * Favorite model
-        TODO: Get all favorites of current signed in user
-        TODO: Add new favorite
-        TODO: Remove favorite
+        * Create cart for new user /favorite/create.php
+        * Get favorites of current signed in user /favorite/list.php
+        * Update favorite (Add/Remove) /favorite/update.php
 
     * Cart model
-        TODO: Get cart list of current signed in user "user_id"
-        TODO: Update cart item list of current signed in user "user_id"
-        TODO: Remove cart item list of current signed in user "user_id"
+        * Get cart list of current signed in user "user_id" /cart/list.php
+        * Update cart item list of current signed in user "user_id" (Add/Remove) /cart/update.php
 
     * User Informations model
-        TODO: Get user informations all users
-        TODO: Get user of signed in user "user_id"
-        TODO: Update user information of signed in user "user_id"
+        * Get user informations all users (LEFT JOIN users) /user_information/list.php
+        * Get user information of signed in user "user_id" /user_information/read.php
+        * Update user information of signed in user "user_id" user_information/update.php
 
     * Product model
-        TODO: Get all products
-        TODO: Create new product
-        TODO: Update a product
-        TODO: Delete a product
+        * Get all products /product/list.php
+        * Create new product /product/create.php
+        * Update a product /product/update.php
+        * Delete a product /product/delete.php
 
     * Contact Messages model
         * Create new message /contact/create.php
         * Get list of messages /contact/list.php
 
     * Admin model
-        TODO: Get all accounts
-        TODO: Get status
-        TODO: Create new account for admin
-        TODO: Update admin account (Important: Status -> Active/Inactive)
-        TODO: Validate user email and password during signin
+        * Unique email address
+        * Get all accounts /admin/list.php
+        * Create new account for admin /admin/create.php
+        * Signin / Signin => Active / Inactive /admin/signout&authenticate.php
+        * Update admin account (Important: Status -> Active/Inactive)
+        * Validate admin email and password during signin (status) /admin/authenticate.php
 
     * Order History model
         TODO: 
@@ -49,7 +50,8 @@
         TODO: Get all orders
         TODO: Get orders of signed in users "user_id"
         TODO: Get orders of signed in users with user informations "LEFT JOIN user_informations"
-        TODO: Create new orders
+        * Create new orders
+        ? How do we get id in user_information table for creating order
         TODO: Update order information (order & payment status)
 
     * Transaction model

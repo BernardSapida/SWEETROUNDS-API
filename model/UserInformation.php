@@ -120,8 +120,8 @@
 
             // if the user information has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE user_informations SET firstname=?, lastname=?, email=?, address_line_1=?, address_line_2=?, city=?, contact=?, user_id=? WHERE id=?, user_id=?");
-                $stmt->bind_param("sssssssii", $this->firstname, $this->lastname, $this->email, $this->address_line_1, $this->address_line_2, $this->city, $this->contact, $this->id, $this->user_id);
+                $stmt = $mysqli->prepare("UPDATE user_informations SET firstname=?, lastname=?, email=?, address_line_1=?, address_line_2=?, city=?, contact=?, user_id=? WHERE user_id=?");
+                $stmt->bind_param("sssssssii", $this->firstname, $this->lastname, $this->email, $this->address_line_1, $this->address_line_2, $this->city, $this->contact, $this->user_id, $this->user_id);
             }
 
             // otherwise, insert a new record for the user information
@@ -163,6 +163,24 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        public static function getUsersInformation() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM users LEFT JOIN user_informations ON users.id = user_informations.user_id");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // delete the user information from the database

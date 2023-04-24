@@ -13,16 +13,17 @@
         $user_id = $data['id'];
         $user_favorite = $favorite->loadById($user_id);
 
-        // Get list of messages
-        $favorites = $user_favorite->getItems();
+        // Process the data
+        $user_favorite->setItems(json_encode($data["items"]));
+        $user_favorite->save();
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve favorites!', $favorites);
+        echo sendResponse(true, 'Successfully update favorites!');
     }
 
-    function sendResponse($success, $message, $data) {
+    function sendResponse($success, $message) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => json_decode($data));
+        $response = array('success' => $success, 'message' => $message);
         return json_encode($response);
     }
 ?>

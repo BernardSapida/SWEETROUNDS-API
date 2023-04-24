@@ -13,10 +13,10 @@
         private $payment_status;
         private $order_status;
         private $user_id;
-        private $order_id;
+        private $user_info_id;
 
         // constructor
-        public function __construct($id = null, $order_number = null, $items = null, $note = null, $tax = null, $shipping_fee = null, $discount = null, $total = null, $payment_status = null, $order_status = null,  $user_id = null,  $order_id = null) {
+        public function __construct($id = null, $order_number = null, $items = null, $note = null, $tax = null, $shipping_fee = null, $discount = null, $total = null, $payment_status = null, $order_status = null,  $user_id = null,  $user_info_id = null) {
             $this->id = $id;
             $this->order_number = $order_number;
             $this->items = $items;
@@ -28,7 +28,7 @@
             $this->payment_status = $payment_status;
             $this->order_status = $order_status;
             $this->user_id = $user_id;
-            $this->order_id = $order_id;
+            $this->user_info_id = $user_info_id;
         }
 
         // getters and setters
@@ -76,8 +76,12 @@
             return $this->user_id;
         }
 
+        public function getInfoId() {
+            return $this->user_id;
+        }
+
         public function getOrderId() {
-            return $this->order_id;
+            return $this->user_info_id;
         }
 
         public function getOrderHistoryDetails() {
@@ -86,7 +90,7 @@
                 "order_number" => $this->order_number, 
                 "payment_status" => $this->payment_status, 
                 "user_id" => $this->user_id, 
-                "order_id" => $this->order_id, 
+                "user_info_id" => $this->user_info_id, 
             );
 
             return $orderHistory;
@@ -124,6 +128,10 @@
             $this->total = $total;
         }
 
+        public function setOrderStatus($order_status) {
+            $this->order_status = $order_status;
+        }
+
         public function setPaymentStatus($payment_status) {
             $this->payment_status = $payment_status;
         }
@@ -132,8 +140,8 @@
             $this->user_id = $user_id;
         }
 
-        public function setOrderId($order_id) {
-            $this->order_id = $order_id;
+        public function setUserInfoId($user_info_id) {
+            $this->user_info_id = $user_info_id;
         }
         
         // save the order to the database
@@ -142,14 +150,14 @@
 
             // if the order has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, order_id=? WHERE id=?");
-                $stmt->bind_param("issiiiissiii", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, user_info_id=? WHERE id=?");
+                $stmt->bind_param("issiiiissisi", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->user_info_id, $this->id);
             }
 
             // otherwise, insert a new record for the order
             else {
-                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_id) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("issiiiissii", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_id);
+                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, user_info_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("issiiiissis", $this->order_number, $this->items, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->user_info_id);
             }
 
             // execute the prepared statement
@@ -168,14 +176,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_id FROM orders WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, user_info_id FROM orders WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_id);
+            $stmt->bind_result($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $user_info_id);
 
             // if the query returned a result, create and return a Order History object
             if ($stmt->fetch()) {
-                $order = new OrderHistory($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_id);
+                $order = new OrderHistory($id, $order_number, $items, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $user_info_id);
                 $stmt->close();
                 return $order;
             }

@@ -1,5 +1,4 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,22 +10,18 @@
 
         // Process the data
         $user = new User();
-        $current_user = $user::loadById($data["id"]);
-        $emailFound = $user->loadByEmail($data["email"]);
+        $current_user = $user::loadByEmail($data["email"]);
 
-        if($emailFound !== null) {
-            // Send a response
-            echo sendResponse(false, 'Email already exist!');
-        } else if($current_user) {
-            $current_user->setFullname(($data['firstname']) . " " . $data['lastname']);
-            $current_user->setEmail($data['email'] == "" ? $current_user->getEmail() : $data['email']);
+        if($current_user) {
+            // Set status to inactive
+            $current_user->setStatus('inactive');
             $current_user->save();
-
+            
             // Send a response
-            echo sendResponse(true, 'Successfully account updated!');
+            echo sendResponse(true, 'Successfully signed out!');
         } else {
             // Send a response
-            echo sendResponse(false, 'Successfully account updated!');
+            echo sendResponse(false, 'Invalid parameters!');
         }
     }
 

@@ -87,7 +87,7 @@
 
             // if the query returned a result, create and return a Cart object
             if ($stmt->fetch()) {
-                $cart = new Favorite($id, $items, $user_id);
+                $cart = new Cart($id, $items, $user_id);
                 $stmt->close();
                 return $cart;
             }

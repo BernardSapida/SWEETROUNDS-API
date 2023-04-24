@@ -1,22 +1,22 @@
 <?php
     require_once dirname(__DIR__)."/utils/database.php";
-    require_once dirname(__DIR__)."/helper/hash.php";
+    require_once dirname(__DIR__)."/helpers/hash.php";
 
     class Admin {
         private $id;
-        private $employee_id;
-        private $employee_name;
-        private $username;
+        private $employee_firstname;
+        private $employee_lastname;
+        private $email;
         private $password;
         private $role;
         private $status;
 
         // constructor
-        public function __construct($id = null, $employee_id = null, $employee_name = null,  $username = null, $password = null, $role = null, $status = null) {
+        public function __construct($id = null, $employee_firstname = null, $employee_lastname = null,  $email = null, $password = null, $role = null, $status = null) {
             $this->id = $id;
-            $this->employee_id = $employee_id;
-            $this->employee_name = $employee_name;
-            $this->username = $username;
+            $this->employee_firstname = $employee_firstname;
+            $this->employee_lastname = $employee_lastname;
+            $this->email = $email;
             $this->password = $password;
             $this->role = $role;
             $this->status = $status;
@@ -27,16 +27,16 @@
             return $this->id;
         }
 
-        public function getEmployeeId() {
-            return $this->employee_id;
+        public function getEmployeeFirstname() {
+            return $this->employee_firstname;
         }
 
-        public function getEmployeeName() {
-            return $this->employee_name;
+        public function getEmployeeLastname() {
+            return $this->employee_lastname;
         }
 
-        public function getUsername() {
-            return $this->username;
+        public function getEmail() {
+            return $this->email;
         }
 
         public function getPassword() {
@@ -54,8 +54,9 @@
         public function getAdminDetails() {
             $adminDetails = array(
                 "id" => $this->id, 
-                "employee_id" => $this->employee_id, 
-                "username" => $this->username, 
+                "employee_firstname" => $this->employee_firstname, 
+                "employee_lastname" => $this->employee_lastname, 
+                "email" => $this->email, 
                 "password" => $this->password, 
                 "role" => $this->role, 
                 "status" => $this->status, 
@@ -68,16 +69,16 @@
             $this->id = $id;
         }
 
-        public function setEmployeeId($employee_id) {
-            $this->employee_id = $employee_id;
+        public function setEmployeeFirstname($employee_firstname) {
+            $this->employee_firstname = $employee_firstname;
         }
 
-        public function setEmployeeName($employee_name) {
-            $this->employee_name = $employee_name;
+        public function setEmployeeLastname($employee_lastname) {
+            $this->employee_lastname = $employee_lastname;
         }
 
-        public function setEmployeeUsername($username) {
-            $this->username = $username;
+        public function setEmail($email) {
+            $this->email = $email;
         }
         
         public function setPassword($password) {
@@ -99,14 +100,14 @@
 
             // if the admin has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE admins SET employee_id=?, employee_name=?, username=?, password=?, role=?, status->? WHERE id=?");
-                $stmt->bind_param("isssssi", $this->employee_id, $this->employee_name, $this->username, $this->password, $this->role, $this->status, $this->id);
+                $stmt = $mysqli->prepare("UPDATE admins SET employee_firstname=?, employee_lastname=?, email=?, password=?, role=?, status=? WHERE id=?");
+                $stmt->bind_param("ssssssi", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->status, $this->id);
             }
 
             // otherwise, insert a new record for the admin
             else {
-                $stmt = $mysqli->prepare("INSERT INTO admins (employee_id, employee_name, username, password, role, status) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("isssss", $this->employee_id, $this->employee_name, $this->username, $this->password, $this->role, $this->status);
+                $stmt = $mysqli->prepare("INSERT INTO admins (employee_firstname, employee_lastname, email, password, role, status) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssss", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->status);
             }
 
             // execute the prepared statement
@@ -125,14 +126,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, employee_id, employee_name, username, password, role, status FROM admins WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, status FROM admins WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($employee_id, $employee_name, $username, $password, $role, $status);
+            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
 
-            // if the query returned a result, create and return a User object
+            // if the query returned a result, create and return a Admin object
             if ($stmt->fetch()) {
-                $admin = new User($id, $employee_id, $employee_name, $username, $password, $role, $status);
+                $admin = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
                 $stmt->close();
                 return $admin;
             }
@@ -142,6 +143,48 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        // load a user from the database by email
+        public static function loadByEmail($email) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, status FROM admins WHERE email=?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+
+            // if the query returned a result, create and return a Admin object
+            if ($stmt->fetch()) {
+                $user = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+                $stmt->close();
+                return $user;
+            }
+
+            // otherwise, return null
+            else {
+                $stmt->close();
+                return null;
+            }
+        }
+
+        // get admin list
+        public static function getAdmins() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // delete the admin from the database

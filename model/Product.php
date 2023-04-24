@@ -102,7 +102,7 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, name, flavor, type, price FROM products WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT id, name, flavor, type, price FROM products WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $stmt->bind_result($id, $name, $flavor, $type, $price);
@@ -119,6 +119,24 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        public static function getProducts() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM products");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // delete the product from the database
