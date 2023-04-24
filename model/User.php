@@ -134,6 +134,29 @@
             }
         }
 
+        // load a user from the database by email
+        public static function loadByEmail($email) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, status FROM users WHERE email=?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $status);
+
+            // if the query returned a result, create and return a User object
+            if ($stmt->fetch()) {
+                $user = new User($id, $fullname, $email, $password, $auth_provider, $status);
+                $stmt->close();
+                return $user;
+            }
+
+            // otherwise, return null
+            else {
+                $stmt->close();
+                return null;
+            }
+        }
+
         // get user list
         public static function getUsers() {
             global $mysqli;
@@ -163,11 +186,4 @@
             $stmt->close();
         }
     }
-
-    // example usage:
-    // $user = new User();
-    // $user->setfullname("testuser");
-    // $user->setPassword("password");
-    // $user->save();
-    // $user2 = User::loadById(1);
 ?>

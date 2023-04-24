@@ -7,7 +7,7 @@
         * Update a single user account /users/delete.php
         * Update password of single user account /users/update_password.php
         * Update user status /users/update_status.php
-        TODO: Validate user email and password during signin
+        * Validate user email and password during signin /users/authenticate.php
 
     * Favorite model
         TODO: Get all favorites of current signed in user
@@ -39,6 +39,7 @@
         TODO: Get status
         TODO: Create new account for admin
         TODO: Update admin account (Important: Status -> Active/Inactive)
+        TODO: Validate user email and password during signin
 
     * Order History model
         TODO: 
