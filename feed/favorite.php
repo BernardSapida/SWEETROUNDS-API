@@ -20,7 +20,7 @@
             $favorite->save();
 
             // Send a response
-            echo sendResponse(true, 'Successfully sent a message!');
+            echo sendResponse(true, 'Successfully saved favorite!');
         }
     }
 
