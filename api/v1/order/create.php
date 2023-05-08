@@ -33,8 +33,8 @@
         $order->setShippingFee($data["shipping_fee"]);
         $order->setDiscount($data["discount"]);
         $order->setTotal($data["total"]);
-        $order->setOrderStatus($data["order_status"]);
-        $order->setPaymentStatus($data["payment_status"]);
+        $order->setOrderStatus("Pending");
+        $order->setPaymentStatus("Pending");
         $order->setUserId($data["user_id"]);
         $order->setUserInfoId($order_detail_id);
         $order->save();
