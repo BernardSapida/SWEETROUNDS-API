@@ -4,14 +4,14 @@
         $employee_lastname = $data['employee_lastname'];
         $email = $data['email'];
         $password = $data['password'];
-        $confirmPassword = $data['confirmPassword'];
+        // $confirmPassword = $data['confirmPassword'];
         $role = $data['role'];
 
         if(!validName($employee_firstname)) return "Firstname must contain only letters and have at least 2 letters";
         if(!validName($employee_lastname)) return "Lastname must contain only letters and have at least 2 letters";
         else if(!validEmail($email)) return "Invalid email address";
         else if(!validPassword($password)) return "Invalid password";
-        else if(!validPasswordConfirmation($password, $confirmPassword)) return "Passwords did not match";
+        // else if(!validPasswordConfirmation($password, $confirmPassword)) return "Passwords did not match";
         else if(!validRole($role)) return "Invalid role";
 
         return true;

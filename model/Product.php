@@ -5,15 +5,13 @@
         private $id;
         private $name;
         private $flavor;
-        private $type;
         private $price;
 
         // constructor
-        public function __construct($id = null, $name = null,  $flavor = null,  $type = null,  $price = null) {
+        public function __construct($id = null, $name = null,  $flavor = null,  $price = null) {
             $this->id = $id;
             $this->name = $name;
             $this->flavor = $flavor;
-            $this->type = $type;
             $this->price = $price;
         }
 
@@ -30,10 +28,6 @@
             return $this->flavor;
         }
 
-        public function getType() {
-            return $this->type;
-        }
-
         public function getPrice() {
             return $this->price;
         }
@@ -43,7 +37,6 @@
                 "id" => $this->id, 
                 "name" => $this->name, 
                 "flavor" => $this->flavor, 
-                "type" => $this->type, 
                 "price" => $this->price, 
             );
 
@@ -62,10 +55,6 @@
             $this->flavor = $flavor;
         }
 
-        public function setType($type) {
-            $this->type = $type;
-        }
-
         public function setPrice($price) {
             $this->price = $price;
         }
@@ -76,14 +65,14 @@
 
             // if the product has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE products SET name=?, flavor=?, type=?, price=? WHERE id=?");
-                $stmt->bind_param("sssii", $this->name, $this->flavor, $this->type, $this->price, $this->id);
+                $stmt = $mysqli->prepare("UPDATE products SET name=?, flavor=?, price=? WHERE id=?");
+                $stmt->bind_param("ssii", $this->name, $this->flavor, $this->price, $this->id);
             }
 
             // otherwise, insert a new record for the product
             else {
-                $stmt = $mysqli->prepare("INSERT INTO products (name, flavor, type, price) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("sssi", $this->name, $this->flavor, $this->type, $this->price);
+                $stmt = $mysqli->prepare("INSERT INTO products (name, flavor, price) VALUES (?, ?, ?)");
+                $stmt->bind_param("ssi", $this->name, $this->flavor, $this->price);
             }
 
             // execute the prepared statement
@@ -102,14 +91,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, name, flavor, type, price FROM products WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, name, flavor, price FROM products WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $name, $flavor, $type, $price);
+            $stmt->bind_result($id, $name, $flavor, $price);
 
             // if the query returned a result, create and return a Product object
             if ($stmt->fetch()) {
-                $product = new Product($id, $name, $flavor, $type, $price);
+                $product = new Product($id, $name, $flavor, $price);
                 $stmt->close();
                 return $product;
             }
@@ -119,6 +108,42 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        // load top 20 low quantity donut
+        public static function loadTop20LowQuantityDonut() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM products ORDER BY quantity ASC LIMIT 20;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // load top 10 donut 
+        public static function loadTop10Donut() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM products ORDER BY quantity_sold DESC LIMIT 10;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         public static function getProducts() {

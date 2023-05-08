@@ -13,7 +13,6 @@
         // Process the data
         $product->setName($data["name"]);
         $product->setFlavor($data["flavor"]);
-        $product->setType($data["type"]);
         $product->setPrice($data["price"]);
         $product->save();
 

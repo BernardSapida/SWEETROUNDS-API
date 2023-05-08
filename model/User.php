@@ -176,6 +176,25 @@
             return $rows;
         }
 
+        // get list of new users of the month
+        public static function getNewUsers() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM users WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE());");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // delete the user from the database
         public function delete() {
             global $mysqli;

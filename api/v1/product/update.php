@@ -16,13 +16,11 @@
         if($current_product) {
             $name = $data["name"] === "" ? $current_product->getName() : $data["name"];
             $flavor = $data["flavor"] === "" ? $current_product->getFlavor() : $data["flavor"];
-            $type = $data["type"] === "" ? $current_product->getType() : $data["type"];
             $price = $data["price"] === "" ? $current_product->getPrice() : $data["price"];
 
             // Process the data
             $current_product->setName($name);
             $current_product->setFlavor($flavor);
-            $current_product->setType($type);
             $current_product->setPrice($price);
             $current_product->save();
 

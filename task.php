@@ -45,6 +45,10 @@
     * Report model
         * Get all transaction of specific admin (cashier)
         * Get all transaction by day, week, month, and year
+        * report for new customer within the month
+        * report for top 10 selling donut and other donuts
+        * report for low stock items quantity <= 20
+        ? Website Setting -> tax, accepting_orders
 
     * Order model
         * Get all orders (inner join with order_details) /order/list.php
@@ -57,12 +61,17 @@
         * Get specific transactions /transaction/read.php
         * Create new transaction /transaction/create.php
     
-    TODO: Populate database with data
-    TODO: report for new customer within the week
-    TODO: report for top 10 selling donut and other donuts
-    TODO: report for low stock items quantity <= 20
-    TODO: Website Setting -> tax, accepting_orders
-    TODO: Revenue/Transaction for Online Website
+    * Populate database
+        * Populate admins table
+        * Populate cart_items table
+        * Populate contact_messages table
+        * Populate favorites table
+        TODO: Populate orders table
+        TODO: Populate order_details table
+        * Populate products table
+        TODO: Populate transactions table
+        * Populate users table
+        * Populate user_informations table
 
     * Important
     ! Error
