@@ -48,6 +48,7 @@
         * report for new customer within the month
         * report for top 10 selling donut and other donuts
         * report for low stock items quantity <= 20
+        * Get # of product sold by day, week, month, year.
         # Website Setting -> tax, accepting_orders
 
     * Order model
@@ -74,7 +75,6 @@
         * Populate user_informations table
 
     * Plan Admin Dashboard Content
-        TODO: Get # of product sold by day, week, month, year.
         TODO: Dashboard
     
     * Important
