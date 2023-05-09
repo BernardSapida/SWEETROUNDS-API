@@ -74,9 +74,8 @@
         * Populate user_informations table
 
     * Plan Admin Dashboard Content
+        TODO: Get # of product sold by day, week, month, year.
         TODO: Dashboard
-        TODO: DI KO NA ALAM GAGAWIN HAHAHAHA
-        TODO: MATULOG NALANG
     
     * Important
     ! Error

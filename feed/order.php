@@ -31,6 +31,7 @@
             // Process the user order
             $order->setOrderNumber(getRandomId());
             $order->setItems(json_encode($userOrder["items"]));
+            $order->setDonutQuantity($userOrder["donut_quantity"]);
             $order->setNote($userOrder["note"]);
             $order->setTax($userOrder["tax"]);
             $order->setShippingFee($userOrder["shipping_fee"]);

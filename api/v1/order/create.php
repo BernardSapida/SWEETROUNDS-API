@@ -28,6 +28,7 @@
         // Process the data for order
         $order->setOrderNumber(getRandomId());
         $order->setItems($data["items"]);
+        $order->setDonutQuantity($data["donut_quantity"]);
         $order->setNote($data["note"]);
         $order->setTax($data["tax"]);
         $order->setShippingFee($data["shipping_fee"]);
