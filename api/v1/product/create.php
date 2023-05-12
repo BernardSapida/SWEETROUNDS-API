@@ -11,9 +11,11 @@
         $product = new Product();
 
         // Process the data
+        $product->setProductNumber($data["product_number"]);
         $product->setName($data["name"]);
         $product->setFlavor($data["flavor"]);
         $product->setPrice($data["price"]);
+        $product->setAvailability($data["availability"]);
         $product->save();
 
         // Send a response

@@ -224,6 +224,19 @@
             return $rows;
         }
 
+        // get order list
+        public static function getPageTotal() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT count(id) as `Total Page` FROM orders");
+            $stmt->execute();
+            $stmt->bind_result($totalPage);
+            $stmt->fetch();
+            $stmt->close();
+
+            return $totalPage;
+        }
+
         // get all donut sold
         public static function getAllDonutSold() {
             global $mysqli;
@@ -291,6 +304,24 @@
             $stmt->close();
 
             return $donutQuantitySold;
+        }
+
+        // load 10 orders 
+        public static function loadTenOrders($rowStart) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id LIMIT 10 OFFSET $rowStart;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
         }
 
         // get user order list

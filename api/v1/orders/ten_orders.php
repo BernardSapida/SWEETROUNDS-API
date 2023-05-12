@@ -1,7 +1,7 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Order.php";
     
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
         $postData = file_get_contents('php://input');
 
@@ -9,13 +9,14 @@
         $data = json_decode($postData, true);
 
         // Process the data
-        $report = new CashierReport();
+        $order = new Order();
 
         // Get user list
-        $transactions = $report::getAllTransactions();
+        $orders = $order::loadTenOrders($data["start"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);
+        header('Content-Type: application/json');
+        echo sendResponse(true, 'Successfully retrieve user orders!', $orders);
     }
 
     function sendResponse($success, $message, $data = null) {

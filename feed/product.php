@@ -15,9 +15,13 @@
             $product = new Product();
 
             // Process the data
+            $product->setProductNumber($donut["product_number"]);
             $product->setName($donut["name"]);
             $product->setFlavor($donut["flavor"]);
             $product->setPrice($donut["price"]);
+            $product->setQuantity($donut["quantity"]);
+            $product->setQuantitySold($donut["quantity_sold"]);
+            $product->setAvailability($donut["availability"]);
             $product->save();
 
             // Send a response
