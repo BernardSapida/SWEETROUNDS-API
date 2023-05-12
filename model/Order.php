@@ -324,6 +324,54 @@
             return $rows;
         }
 
+        // search orders 
+        public static function searchOrder($key, $rowStart) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id 
+            WHERE order_number LIKE '%$key%' OR 
+            firstname LIKE '%$key%' OR
+            lastname LIKE '%$key%' OR
+            donut_quantity LIKE '%$key%' OR
+            total LIKE '%$key%' OR
+            order_status LIKE '%$key%' LIMIT 10 OFFSET $rowStart;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // search orders 
+        public static function getSearchOrderNPage($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id 
+            WHERE order_number LIKE '%$key%' OR 
+            firstname LIKE '%$key%' OR
+            lastname LIKE '%$key%' OR
+            donut_quantity LIKE '%$key%' OR
+            total LIKE '%$key%' OR
+            order_status LIKE '%$key%'");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // get user order list
         public static function getUserOrders($userId) {
             global $mysqli;
