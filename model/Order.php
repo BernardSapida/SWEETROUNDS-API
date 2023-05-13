@@ -224,19 +224,6 @@
             return $rows;
         }
 
-        // get order list
-        public static function getPageTotal() {
-            global $mysqli;
-
-            $stmt = $mysqli->prepare("SELECT count(id) as `Total Page` FROM orders");
-            $stmt->execute();
-            $stmt->bind_result($totalPage);
-            $stmt->fetch();
-            $stmt->close();
-
-            return $totalPage;
-        }
-
         // get all donut sold
         public static function getAllDonutSold() {
             global $mysqli;
@@ -306,26 +293,8 @@
             return $donutQuantitySold;
         }
 
-        // load 10 orders 
-        public static function loadTenOrders($rowStart) {
-            global $mysqli;
-
-            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id LIMIT 10 OFFSET $rowStart;");
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
-        }
-
         // search orders 
-        public static function searchOrder($key, $rowStart) {
+        public static function searchOrder($key) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id 
@@ -334,31 +303,7 @@
             lastname LIKE '%$key%' OR
             donut_quantity LIKE '%$key%' OR
             total LIKE '%$key%' OR
-            order_status LIKE '%$key%' LIMIT 10 OFFSET $rowStart;");
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
-        }
-
-        // search orders 
-        public static function getSearchOrderNPage($key) {
-            global $mysqli;
-
-            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id 
-            WHERE order_number LIKE '%$key%' OR 
-            firstname LIKE '%$key%' OR
-            lastname LIKE '%$key%' OR
-            donut_quantity LIKE '%$key%' OR
-            total LIKE '%$key%' OR
-            order_status LIKE '%$key%'");
+            order_status LIKE '%$key%';");
             $stmt->execute();
             $result = $stmt->get_result();
 

@@ -21,6 +21,7 @@
             $product->setPrice($donut["price"]);
             $product->setQuantity($donut["quantity"]);
             $product->setQuantitySold($donut["quantity_sold"]);
+            $product->setImage($donut["image"]);
             $product->setAvailability($donut["availability"]);
             $product->save();
 

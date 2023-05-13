@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../")."/model/CashierReport.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $revenue = $report::getWeekRevenue($data["id"], $data["year"], $data["month"], $data["week"]);
+        $revenue = $report::getCashierWeekRevenue($data["id"], $data["year"], $data["month"], $data["week"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve week revenue!', $revenue);

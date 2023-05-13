@@ -12,17 +12,16 @@
         $order = new Order();
 
         // Get user list
-        $orders = $order::searchOrder($data["search"], $data["start"]);
-        $NPage = count($order::getSearchOrderNPage($data["search"]));
+        $orders = $order::searchOrder($data["search"]);
 
         // Send a response
         header('Content-Type: application/json');
-        echo sendResponse(true, 'Successfully retrieve user orders!', $orders, $NPage);
+        echo sendResponse(true, 'Successfully retrieve user orders!', $orders);
     }
 
-    function sendResponse($success, $message, $data = null, $NPage = 0) {
+    function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data, 'size' => $NPage);
+        $response = array('success' => $success, 'message' => $message, 'data' => $data);
         return json_encode($response);
     }
 ?>

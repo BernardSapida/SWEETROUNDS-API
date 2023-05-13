@@ -8,18 +8,20 @@
         private $flavor;
         private $price;
         private $quantity;
-        private $quantity_sold;
+        private $quantitySold;
+        private $image;
         private $availability;
 
         // constructor
-        public function __construct($id = null, $product_number = null, $name = null,  $flavor = null,  $price = null,  $quantity = null,  $quantity_sold = null, $availability = null) {
+        public function __construct($id = null, $product_number = null, $name = null,  $flavor = null,  $price = null,  $quantity = null,  $quantitySold = null,  $image = null, $availability = null) {
             $this->id = $id;
             $this->product_number = $product_number;
             $this->name = $name;
             $this->flavor = $flavor;
             $this->price = $price;
             $this->quantity = $quantity;
-            $this->quantity_sold = $quantity_sold;
+            $this->quantitySold = $quantitySold;
+            $this->image = $image;
             $this->availability = $availability;
         }
 
@@ -48,8 +50,12 @@
             return $this->quantity;
         }
 
-        public function getquantity_sold() {
-            return $this->quantity_sold;
+        public function getQuantitySold() {
+            return $this->image;
+        }
+
+        public function getImage() {
+            return $this->quantitySold;
         }
 
         public function getAvailability() {
@@ -92,8 +98,12 @@
             $this->quantity = $quantity;
         }
 
-        public function setQuantitySold($quantity_sold) {
-            $this->quantity_sold += $quantity_sold;
+        public function setQuantitySold($quantitySold) {
+            $this->quantitySold += $quantitySold;
+        }
+
+        public function setImage($image) {
+            $this->image = $image;
         }
 
         public function setAvailability($availability) {
@@ -106,14 +116,14 @@
 
             // if the product has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE products SET product_number=?, name=?, flavor=?, price=?, quantity, quantity_sold, availability=? WHERE id=?");
-                $stmt->bind_param("sssiiisi", $this->product_number, $this->name, $this->flavor, $this->price, $this->quantity, $this->quantity_sold, $this->availability, $this->id);
+                $stmt = $mysqli->prepare("UPDATE products SET product_number=?, name=?, flavor=?, price=?, quantity, quantity_sold, image, availability=? WHERE id=?");
+                $stmt->bind_param("sssiiissi", $this->product_number, $this->name, $this->flavor, $this->price, $this->quantity, $this->quantitySold, $this->image, $this->availability, $this->id);
             }
 
             // otherwise, insert a new record for the product
             else {
-                $stmt = $mysqli->prepare("INSERT INTO products (product_number, name, flavor, price, quantity, quantity_sold, availability) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssiiis", $this->product_number, $this->name, $this->flavor, $this->price, $this->quantity, $this->quantity_sold, $this->availability);
+                $stmt = $mysqli->prepare("INSERT INTO products (product_number, name, flavor, price, quantity, quantity_sold, image, availability) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssiiiss", $this->product_number, $this->name, $this->flavor, $this->price, $this->quantity, $this->quantitySold, $this->image, $this->availability);
             }
 
             // execute the prepared statement
@@ -132,14 +142,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, product_number, name, flavor, price, quantity, quantity_sold, availability FROM products WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, product_number, name, flavor, price, quantity, quantity_sold, image, availability FROM products WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $product_number, $name, $flavor, $price, $quantity, $quantity_sold, $availability);
+            $stmt->bind_result($id, $product_number, $name, $flavor, $price, $quantity, $quantitySold, $image, $availability);
 
             // if the query returned a result, create and return a Product object
             if ($stmt->fetch()) {
-                $product = new Product($id, $product_number, $name, $flavor, $price, $quantity, $quantity_sold, $availability);
+                $product = new Product($id, $product_number, $name, $flavor, $price, $quantity, $quantitySold, $image, $availability);
                 $stmt->close();
                 return $product;
             }

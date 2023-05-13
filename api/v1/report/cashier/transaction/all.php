@@ -1,7 +1,7 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../")."/model/CashierReport.php";
     
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Get the raw POST data
         $postData = file_get_contents('php://input');
 
@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getTransactionByYear($data["year"]);
+        $transactions = $report::getAllTransactions();
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);

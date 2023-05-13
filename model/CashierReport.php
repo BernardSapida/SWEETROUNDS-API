@@ -22,7 +22,7 @@
         }
 
         // get report list
-        public static function getTransactions($id) {
+        public static function getCashierTransactions($id) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=?");
@@ -43,7 +43,7 @@
 
         // get report list by day
         // Day 1-31
-        public static function getTransactionByDay($id, $day) {
+        public static function getCashierTransactionByDay($id, $day) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND DATE_FORMAT(transactions.created_at, '%d')=?");
@@ -63,7 +63,7 @@
         }
 
         // get report list by week
-        public static function getTransactionByWeek($id, $year, $month, $week) {
+        public static function getCashierTransactionByWeek($id, $year, $month, $week) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
@@ -83,7 +83,7 @@
         }
 
         // get report list by month
-        public static function getTransactionByMonth($id, $year, $month) {
+        public static function getCashierTransactionByMonth($id, $year, $month) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
@@ -103,7 +103,7 @@
         }
 
         // get report list by year
-        public static function getTransactionByYear($id, $year) {
+        public static function getCashierTransactionByYear($id, $year) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=?");
@@ -123,10 +123,10 @@
         }
 
         // get report list
-        public static function getAllRevenue() {
+        public static function getCashierAllRevenue() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -142,10 +142,10 @@
         }
 
         // get report list
-        public static function getRevenue($id) {
+        public static function getCashierRevenue($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=?");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -162,10 +162,10 @@
         }
 
         // get revenue report list by day
-        public static function getDayRevenue($id, $day) {
+        public static function getCashierDayRevenue($id, $day) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND DATE_FORMAT(transactions.created_at, '%d')=?");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND DATE_FORMAT(transactions.created_at, '%d')=?");
             $stmt->bind_param("ii", $id, $day);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -182,10 +182,10 @@
         }
 
         // get revenue report list by week
-        public static function getWeekRevenue($id, $year, $month, $week) {
+        public static function getCashierWeekRevenue($id, $year, $month, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
             $stmt->bind_param("iiii", $id, $year, $month, $week);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -202,10 +202,10 @@
         }
 
         // get revenue report list by month
-        public static function getMonthRevenue($id, $year, $month) {
+        public static function getCashierMonthRevenue($id, $year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
             $stmt->bind_param("iii", $id, $year, $month);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -222,11 +222,237 @@
         }
 
         // get revenue report list by year
-        public static function getYearRevenue($id, $year) {
+        public static function getCashierYearRevenue($id, $year) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as Revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=?");
             $stmt->bind_param("ii", $id, $year);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list
+        public static function getAllRevenue() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by day
+        public static function getDayRevenue($date) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(total) as revenue FROM transactions WHERE DATE(created_at) = ?");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by week
+        public static function getWeekRevenue($year, $month, $week) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by month
+        public static function getMonthRevenue($year, $month) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt->bind_param("ii", $year, $month);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by month
+        public static function getMonthlyRevenue($year) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT
+            MONTH(created_at) AS month,
+            SUM(total) AS revenue
+            FROM transactions
+            WHERE YEAR(created_at) = ?
+            GROUP BY MONTH(created_at)
+            ORDER BY MONTH(created_at) ASC");
+
+            $stmt->bind_param("i", $year);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by year
+        public static function getYearRevenue($year) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=?");
+            $stmt->bind_param("i", $year);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list
+        public static function getTransactions() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by day
+        // Day 1-31
+        public static function getTransactionByDay($day) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE DATE_FORMAT(transactions.created_at, '%d')=?");
+            $stmt->bind_param("i", $day);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by week
+        public static function getTransactionByWeek($year, $month, $week) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by month
+        public static function getTransactionByMonth($year, $month) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt->bind_param("ii", $year, $month);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by year
+        public static function getTransactionByYear($year) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins INNER JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=?");
+            $stmt->bind_param("i", $year);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
