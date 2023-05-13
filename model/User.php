@@ -157,11 +157,39 @@
             }
         }
 
+        // search users 
+        public static function searchUser($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM users LEFT JOIN user_informations ON users.id = user_informations.user_id
+            WHERE fullname LIKE '%$key%' OR 
+            users.email LIKE '%$key%' OR
+            password LIKE '%$key%' OR
+            auth_provider LIKE '%$key%' OR
+            address_line_1 LIKE '%$key%' OR
+            address_line_2 LIKE '%$key%' OR
+            city LIKE '%$key%' OR
+            contact LIKE '%$key%' OR
+            status LIKE '%$key%' OR
+            users.created_at LIKE '%$key%';");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // get user list
         public static function getUsers() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM users");
+            $stmt = $mysqli->prepare("SELECT * FROM users LEFT JOIN user_informations ON users.id = user_informations.user_id");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

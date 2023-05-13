@@ -145,6 +145,31 @@
             }
         }
 
+        // search admins 
+        public static function searchAdmin($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM admins
+            WHERE employee_firstname LIKE '%$key%' OR 
+            employee_lastname LIKE '%$key%' OR
+            email LIKE '%$key%' OR
+            password LIKE '%$key%' OR
+            role LIKE '%$key%' OR
+            status LIKE '%$key%' OR
+            created_at LIKE '%$key%';");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // load a user from the database by email
         public static function loadByEmail($email) {
             global $mysqli;

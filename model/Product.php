@@ -215,6 +215,31 @@
             return $rows;
         }
 
+        // search orders 
+        public static function searchProduct($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM products
+            WHERE product_number LIKE '%$key%' OR 
+            name LIKE '%$key%' OR
+            flavor LIKE '%$key%' OR
+            price LIKE '%$key%' OR
+            quantity LIKE '%$key%' OR
+            quantity_sold LIKE '%$key%' OR
+            availability LIKE '%$key%';");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // delete the product from the database
         public function delete() {
             global $mysqli;
