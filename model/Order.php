@@ -312,6 +312,7 @@
             lastname LIKE '%$key%' OR
             donut_quantity LIKE '%$key%' OR
             total LIKE '%$key%' OR
+            payment_status LIKE '%$key%' OR
             order_status LIKE '%$key%';");
             $stmt->execute();
             $result = $stmt->get_result();
