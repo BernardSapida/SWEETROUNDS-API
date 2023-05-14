@@ -94,6 +94,15 @@
             $orderHistory = array(
                 "id" => $this->id, 
                 "order_number" => $this->order_number, 
+                "items" => $this->items, 
+                "donut_quantity" => $this->donut_quantity, 
+                "note" => $this->note, 
+                "tax" => $this->tax, 
+                "shipping_fee" => $this->shipping_fee, 
+                "discount" => $this->discount, 
+                "total" => $this->total, 
+                "payment_status" => $this->payment_status, 
+                "order_status" => $this->order_status, 
                 "payment_status" => $this->payment_status, 
                 "user_id" => $this->user_id, 
                 "order_detail_id" => $this->order_detail_id, 
@@ -160,8 +169,8 @@
 
             // if the order has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, donut_quantity, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, order_detail_id=? WHERE id=?");
-                $stmt->bind_param("isisiiiissisi", $this->order_number, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_detail_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, donut_quantity=?, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, order_detail_id=? WHERE id=?");
+                $stmt->bind_param("ssisiiiissisi", $this->order_number, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_detail_id, $this->id);
             }
 
             // otherwise, insert a new record for the order

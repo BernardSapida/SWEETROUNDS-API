@@ -14,12 +14,15 @@
         // Get user list
         $current_order = $order::loadById($data["id"]);
 
+        // echo json_encode($current_order->getOrderHistoryDetails());
+
         if($current_order) {
+            $current_order->setOrderStatus($data["order_status"]);
             $current_order->setPaymentStatus($data["payment_status"]);
             $current_order->save();
 
             // Send a response
-            echo sendResponse(true, 'Successfully updated payment status!');
+            echo sendResponse(true, 'Successfully updated orders status!');
         } else {
             echo sendResponse(false, 'Invalid parameters');
         }
