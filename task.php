@@ -74,8 +74,45 @@
         * Populate users table
         * Populate user_informations table
 
-    * Plan Admin Dashboard Content
-        TODO: Dashboard
+    * Sales Report
+        * Online / Walk In
+        TODO: Total Revenue - Day
+        TODO: Total Revenue - Week
+        TODO: Total Revenue - Month
+        TODO: Total Revenue - Year
+
+        * Online / Walk In
+        TODO: Number of Transaction - Day
+        TODO: Number of Transaction - Week
+        TODO: Number of Transaction - Month
+        TODO: Number of Transaction - Year
+
+        TODO: Average Transaction - Day
+        TODO: Average Transaction - Week
+        TODO: Average Transaction - Month
+        TODO: Average Transaction - Year
+
+        TODO: New customers of the month
+
+        ? Inventory Information
+        TODO: Get all donuts with less than 20 quantity (Low Quantity Donut)
+        TODO: Top 10 Selling Donuts
+        TODO: All donuts with total price sold
+
+        TODO: Per Cashier Transaction
+        * Sample:
+        *       Cashier 1: 10 Transactions
+        *       Cashier 2: 20 Transactions
+        *       Cashier 3: 30 Transactions
+        *       Cashier 4: 40 Transactions
+        *       Total: 100 Transactions
+
+    * Cashier WalkIn Transaction
+        * Create a page with the following requirement
+        TODO: Columns -> Name, Flavor, Image, Quantity, Price.
+        TODO: Input -> All column fields, Note (Special Request)
+        TODO: Card -> Total, discount
+        TODO: Print Receipt -> Business Name, Order Number, Contact #, Shop Address, Date of Transaction, Items, Discount, Total
     
     * Important
     ! Error
