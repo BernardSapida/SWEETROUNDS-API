@@ -51,7 +51,7 @@
     }
     
     function validRole($role) {
-        $roles = array('manager', 'order fulfillment specialist', 'cashier');
+        $roles = array('Manager', 'Order Fulfillment Specialist', 'Cashier');
         
         return in_array($role, $roles);
     }

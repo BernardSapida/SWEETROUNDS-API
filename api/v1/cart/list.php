@@ -13,8 +13,6 @@
         $cart = new Cart();
         $user_cart = $cart->loadById($user_id);
 
-        echo $user_cart->getUserId();
-
         // Get list of messages
         $cart_items = $user_cart->getItems();
 

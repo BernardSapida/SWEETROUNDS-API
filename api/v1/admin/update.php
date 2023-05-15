@@ -12,21 +12,21 @@
         // Process the data
         $admin = new Admin();
         $current_admin = $admin::loadById($data["id"]);
-        $emailFound = $admin->loadByEmail($data["email"]);
 
-        if($emailFound !== null) {
-            // Send a response
-            echo sendResponse(false, 'Email already exist!');
-        } else if($current_admin) {
+       if($current_admin) {
             $employee_firstname = $data["employee_firstname"] == "" ? $current_admin->getEmployeeFirstname() : $data["employee_firstname"];
             $employee_lastname = $data["employee_lastname"] == "" ? $current_admin->getEmployeeLastname() : $data["employee_lastname"];
             $email = $data["email"] == "" ? $current_admin->getEmail() : $data["email"];
+            $password = $data["password"] == "" ? $current_admin->getPassword() : $data["password"];
             $role = $data["role"] == "" ? $current_admin->getRole() : $data["role"];
+            $status = $data["status"] == "" ? $current_admin->getStatus() : $data["status"];
 
             $current_admin->setEmployeeFirstname($employee_firstname);
             $current_admin->setEmployeeLastname($employee_lastname);
             $current_admin->setEmail($email);
+            $current_admin->setPassword($password);
             $current_admin->setRole($role);
+            $current_admin->setStatus($status);
             $current_admin->save();
 
             // Send a response

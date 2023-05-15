@@ -14,14 +14,12 @@
         $current_product = $product->loadById($product_id);
 
         if($current_product) {
-            $name = $data["name"] === "" ? $current_product->getName() : $data["name"];
-            $flavor = $data["flavor"] === "" ? $current_product->getFlavor() : $data["flavor"];
-            $price = $data["price"] === "" ? $current_product->getPrice() : $data["price"];
-
             // Process the data
-            $current_product->setName($name);
-            $current_product->setFlavor($flavor);
-            $current_product->setPrice($price);
+            $current_product->setName($data["name"]);
+            $current_product->setFlavor($data["flavor"]);
+            $current_product->setPrice($data["price"]);
+            $current_product->setQuantity($data["quantity"]);
+            $current_product->setAvailability($data["availability"]);
             $current_product->save();
 
             // Send a response

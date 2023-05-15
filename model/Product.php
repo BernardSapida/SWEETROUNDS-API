@@ -116,7 +116,7 @@
 
             // if the product has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE products SET product_number=?, name=?, flavor=?, price=?, quantity, quantity_sold, image, availability=? WHERE id=?");
+                $stmt = $mysqli->prepare("UPDATE products SET product_number=?, name=?, flavor=?, price=?, quantity=?, quantity_sold=?, image=?, availability=? WHERE id=?");
                 $stmt->bind_param("sssiiissi", $this->product_number, $this->name, $this->flavor, $this->price, $this->quantity, $this->quantitySold, $this->image, $this->availability, $this->id);
             }
 
