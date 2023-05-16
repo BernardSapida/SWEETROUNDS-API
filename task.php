@@ -76,23 +76,42 @@
 
     * Sales Report
         * Online / Walk In
-        TODO: Total Revenue - Day
-        TODO: Total Revenue - Week
-        TODO: Total Revenue - Month
-        TODO: Total Revenue - Year
+
+        * Total Revenue - Day
+        walkin - /api/v1/report/walkins_revenue/day.php => date
+        online - /api/v1/report/online/revenue/day.php  => date
+
+        * Total Revenue - Week
+        walkin - /api/v1/report/walkins_revenue/week.php => year, month, week
+        online - /api/v1/report/online/revenue/week.php  => year, month, week
+
+        * Total Revenue - Month
+        walkin - /api/v1/report/walkins_revenue/week.php => year, month
+        online - /api/v1/report/online/revenue/week.php  => year, month
+
+        ! TODO: Total Revenue - Year
+
+        ------------------------------------------------------------------------
 
         * Online / Walk In
         TODO: Number of Transaction - Day
         TODO: Number of Transaction - Week
+
         TODO: Number of Transaction - Month
-        TODO: Number of Transaction - Year
+        online - /api/v1/report/online/transaction/month.php  => year, month
+
+        ! TODO: Number of Transaction - Year
+
+        ------------------------------------------------------------------------
 
         TODO: Average Transaction - Day
         TODO: Average Transaction - Week
         TODO: Average Transaction - Month
-        TODO: Average Transaction - Year
+        ! TODO: Average Transaction - Year
 
         TODO: New customers of the month
+
+        ------------------------------------------------------------------------
 
         ? Inventory Information
         TODO: Get all donuts with less than 20 quantity (Low Quantity Donut)
@@ -100,6 +119,10 @@
         TODO: All donuts with total price sold
 
         TODO: Per Cashier Transaction
+            TODO: Day
+            TODO: Week
+            TODO: Month
+
         * Sample:
         *       Cashier 1: 10 Transactions
         *       Cashier 2: 20 Transactions
@@ -109,13 +132,11 @@
 
     * Cashier WalkIn Transaction
         * Create a page with the following requirement
-        TODO: Columns -> Name, Flavor, Image, Quantity, Price.
-        TODO: Input -> All column fields, Note (Special Request)
-        TODO: Card -> Total, discount
-        TODO: Print Receipt -> Business Name, Order Number, Contact #, Shop Address, Date of Transaction, Items, Discount, Total
+        * Columns -> Name, Flavor, Image, Quantity, Price.
+        * Input -> All column fields, Note (Special Request)
+        * Card -> Total, discount
+        * Print Receipt -> Business Name, Order Number, Contact #, Shop Address, Date of Transaction, Items, Discount, Total
 
-    Transaction: invoice_id
-    
     * Important
     ! Error
     ? Questions

@@ -16,7 +16,7 @@
             $transaction = new Transaction();
 
             // Process the data for order
-            $transaction->setOrderNumber(getRandomId());
+            $transaction->setInvoiceId($userTransaction["invoice_id"]);
             $transaction->setItems(json_encode($userTransaction["items"]));
             $transaction->setNote($userTransaction["note"]);
             $transaction->setTax($userTransaction["tax"]);

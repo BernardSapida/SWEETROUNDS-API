@@ -155,6 +155,30 @@
             }
         }
 
+        // search orders 
+        public static function searchTransaction($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT * FROM transactions 
+            WHERE invoice_id LIKE '%$key%' OR 
+            note LIKE '%$key%' OR
+            tax LIKE '%$key%' OR
+            discount LIKE '%$key%' OR
+            total LIKE '%$key%' OR
+            created_at LIKE '%$key%';");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // get transaction list
         public static function getTransactions() {
             global $mysqli;
