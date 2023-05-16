@@ -4,12 +4,14 @@
     class Setting {
         private $id;
         private $tax;
+        private $discount;
         private $accepting_order;
 
         // constructor
-        public function __construct($id = null, $tax = null,  $accepting_order = null) {
+        public function __construct($id = null, $tax = null, $discount = null,  $accepting_order = null) {
             $this->id = $id;
             $this->tax = $tax;
+            $this->discount = $discount;
             $this->accepting_order = $accepting_order;
         }
 
@@ -22,6 +24,10 @@
             return $this->tax;
         }
 
+        public function getDiscount() {
+            return $this->discount;
+        }
+
         public function getAcceptingOrder() {
             return $this->accepting_order;
         }
@@ -30,6 +36,7 @@
             $setting = array(
                 "id" => $this->id, 
                 "tax" => $this->tax, 
+                "discount" => $this->discount, 
                 "accepting_order" => $this->accepting_order, 
             );
 
@@ -44,6 +51,10 @@
             $this->tax = $tax;
         }
 
+        public function setDiscount($discount) {
+            $this->discount = $discount;
+        }
+
         public function setAcceptingOrder($accepting_order) {
             $this->accepting_order = $accepting_order;
         }
@@ -54,14 +65,14 @@
 
             // if the setting has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE settings SET tax=?, accepting_order=? WHERE id=?");
-                $stmt->bind_param("iii", $this->tax, $this->accepting_order, $this->id);
+                $stmt = $mysqli->prepare("UPDATE settings SET tax=?, discount=?, accepting_order=? WHERE id=?");
+                $stmt->bind_param("iiii", $this->tax, $this->discount, $this->accepting_order, $this->id);
             }
 
             // otherwise, insert a new record for the setting
             else {
-                $stmt = $mysqli->prepare("INSERT INTO settings (tax, accepting_order) VALUES (?, ?)");
-                $stmt->bind_param("ii", $this->tax, $this->accepting_order);
+                $stmt = $mysqli->prepare("INSERT INTO settings (tax, discount, accepting_order) VALUES (?, ?, ?)");
+                $stmt->bind_param("iii", $this->tax, $this->discount, $this->accepting_order);
             }
 
             // execute the prepared statement
@@ -80,14 +91,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, tax, accepting_order FROM settings WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, tax, discount, accepting_order FROM settings WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $tax, $accepting_order);
+            $stmt->bind_result($id, $tax, $discount, $accepting_order);
 
             // if the query returned a result, create and return a Setting object
             if ($stmt->fetch()) {
-                $setting = new Setting($id, $tax, $accepting_order);
+                $setting = new Setting($id, $tax, $discount, $accepting_order);
                 $stmt->close();
                 return $setting;
             }

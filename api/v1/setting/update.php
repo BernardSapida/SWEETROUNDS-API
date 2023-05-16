@@ -14,6 +14,7 @@
 
         // Process the data
         $admin_setting->setTax($data["tax"]);
+        $admin_setting->setDiscount($data["discount"]);
         $admin_setting->setAcceptingOrder($data["accepting_order"]);
         $admin_setting->save();
 

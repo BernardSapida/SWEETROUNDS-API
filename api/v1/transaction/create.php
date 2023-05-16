@@ -1,6 +1,5 @@
 <?php
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
-    require_once realpath(dirname(__FILE__) . "/../../../")."/helpers/hash.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/Transaction.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,7 +11,7 @@
         $transaction = new Transaction();
 
         // Process the data for order
-        $transaction->setOrderNumber(getRandomId());
+        $transaction->setInvoiceId($data["invoice_id"]);
         $transaction->setItems($data["items"]);
         $transaction->setNote($data["note"]);
         $transaction->setTax($data["tax"]);

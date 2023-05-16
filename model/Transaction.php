@@ -3,7 +3,7 @@
 
     class Transaction {
         private $id;
-        private $order_number;
+        private $invoice_id;
         private $items;
         private $note;
         private $tax;
@@ -12,9 +12,9 @@
         private $admin_id;
 
         // constructor
-        public function __construct($id = null, $order_number = null, $items = null, $note = null, $tax = null, $discount = null, $total = null,  $admin_id = null) {
+        public function __construct($id = null, $invoice_id = null, $items = null, $note = null, $tax = null, $discount = null, $total = null,  $admin_id = null) {
             $this->id = $id;
-            $this->order_number = $order_number;
+            $this->invoice_id = $invoice_id;
             $this->items = $items;
             $this->note = $note;
             $this->tax = $tax;
@@ -29,7 +29,7 @@
         }
 
         public function getOrderNumber() {
-            return $this->order_number;
+            return $this->invoice_id;
         }
 
         public function getItems() {
@@ -59,6 +59,7 @@
         public function getTransaction() {
             $transaction = array(
                 "id" => $this->id, 
+                "invoice_id" => $this->invoice_id, 
                 "items" => $this->items, 
                 "admin_id" => $this->admin_id, 
                 "note" => $this->note, 
@@ -75,8 +76,8 @@
             $this->id = $id;
         }
 
-        public function setOrderNumber($order_number) {
-            $this->order_number = $order_number;
+        public function setInvoiceId($invoice_id) {
+            $this->invoice_id = $invoice_id;
         }
 
         public function setItems($items) {
@@ -109,14 +110,14 @@
 
             // if the transaction has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE transactions SET order_number=?, items=?, note=?, tax=?, discount=?, total=?, admin_id=? WHERE id=?");
-                $stmt->bind_param("issiiiii", $this->order_number, $this->items, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE transactions SET invoice_id, items=?, note=?, tax=?, discount=?, total=?, admin_id=? WHERE id=?");
+                $stmt->bind_param("issiiiii", $this->invoice_id, $this->items, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id, $this->id);
             }
 
             // otherwise, insert a new record for the transaction
             else {
-                $stmt = $mysqli->prepare("INSERT INTO transactions (order_number, items, note, tax, discount, total, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("issiiii", $this->order_number, $this->items, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id);
+                $stmt = $mysqli->prepare("INSERT INTO transactions (invoice_id, items, note, tax, discount, total, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("issiiii", $this->invoice_id, $this->items, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id);
             }
 
             // execute the prepared statement
@@ -135,14 +136,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, order_number, items, note, tax, discount, total, admin_id FROM transactions WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, invoice_id, items, note, tax, discount, total, admin_id FROM transactions WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $order_number, $items, $note, $tax, $discount, $total, $admin_id);
+            $stmt->bind_result($id, $invoice_id, $items, $note, $tax, $discount, $total, $admin_id);
 
             // if the query returned a result, create and return a Favorite object
             if ($stmt->fetch()) {
-                $transaction = new Transaction($id, $order_number, $items, $note, $tax, $discount, $total, $admin_id);
+                $transaction = new Transaction($id, $invoice_id, $items, $note, $tax, $discount, $total, $admin_id);
                 $stmt->close();
                 return $transaction;
             }

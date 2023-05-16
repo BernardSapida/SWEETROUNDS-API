@@ -113,6 +113,8 @@
         TODO: Input -> All column fields, Note (Special Request)
         TODO: Card -> Total, discount
         TODO: Print Receipt -> Business Name, Order Number, Contact #, Shop Address, Date of Transaction, Items, Discount, Total
+
+    Transaction: invoice_id
     
     * Important
     ! Error

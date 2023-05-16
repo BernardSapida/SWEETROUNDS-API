@@ -51,11 +51,11 @@
         }
 
         public function getQuantitySold() {
-            return $this->image;
+            return $this->quantitySold;
         }
 
         public function getImage() {
-            return $this->quantitySold;
+            return $this->image;
         }
 
         public function getAvailability() {
