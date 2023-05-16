@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getCashierTransactionByYear($data["id"], $data["year"]);
+        $transactions = $report::getCashierTransactionByYear($data["year"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);

@@ -110,16 +110,16 @@
 
         ------------------------------------------------------------------------
 
-        TODO: Average Sale - Day
-        walkin - 
+        * Average Sale - Day
+        walkin - /api/v1/report/walkins_sale/average/day.php
         online - /api/v1/report/online/transaction/average/day.php
 
-        TODO: Average Sale - Week
-        walkin - 
+        * Average Sale - Week
+        walkin - /api/v1/report/walkins_sale/average/week.php
         online - /api/v1/report/online/transaction/average/week.php
 
-        TODO: Average Sale - Month
-        walkin - 
+        * Average Sale - Month
+        walkin - /api/v1/report/walkins_sale/average/month.php
         online - /api/v1/report/online/transaction/average/month.php
 
         ! TODO: Average Transaction - Year
@@ -139,10 +139,15 @@
         * All donuts with total price sold SORT BY highest sale
         /api/v1/report/donut/total_sale.php
 
-        TODO: Per Cashier Transaction
-            TODO: Day
-            TODO: Week
-            TODO: Month
+        * Per Cashier Transaction
+            * Day
+            /api/v1/report/cashier/transaction/day.php
+
+            * Week
+            /api/v1/report/cashier/transaction/week.php
+
+            * Month
+            /api/v1/report/cashier/transaction/month.php
 
         * Sample:
         *       Cashier 1: 10 Transactions

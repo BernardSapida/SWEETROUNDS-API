@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getCashierTransactionByDay($data["id"], $data["day"]);
+        $transactions = $report::getCashierTransactionByDay($data["date"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);

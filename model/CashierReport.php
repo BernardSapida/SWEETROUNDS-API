@@ -103,11 +103,11 @@
 
         // get report list by day
         // Day 1-31
-        public static function getCashierTransactionByDay($id, $day) {
+        public static function getCashierTransactionByDay($day) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND DATE_FORMAT(transactions.created_at, '%d')=?");
-            $stmt->bind_param("ii", $id, $day);
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
+            $stmt->bind_param("s", $day);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -123,11 +123,11 @@
         }
 
         // get report list by week
-        public static function getCashierTransactionByWeek($id, $year, $month, $week) {
+        public static function getCashierTransactionByWeek($year, $month, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("iiii", $id, $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("iii", $year, $month, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -143,11 +143,11 @@
         }
 
         // get report list by month
-        public static function getCashierTransactionByMonth($id, $year, $month) {
+        public static function getCashierTransactionByMonth($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
-            $stmt->bind_param("iii", $id, $year, $month);
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -163,11 +163,11 @@
         }
 
         // get report list by year
-        public static function getCashierTransactionByYear($id, $year) {
+        public static function getCashierTransactionByYear($year) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE admins.id=? AND YEAR(transactions.created_at)=?");
-            $stmt->bind_param("ii", $id, $year);
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=?");
+            $stmt->bind_param("i", $year);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
