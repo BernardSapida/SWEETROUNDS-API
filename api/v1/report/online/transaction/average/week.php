@@ -12,7 +12,7 @@
         $report = new OrderReport();
 
         // Get user list
-        $transactions = $report::getWeekAverageSale($data["year"], $data["month"], $data["week"]);
+        $transactions = $report::getWeekAverageSale($data["year"], $data["week"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);

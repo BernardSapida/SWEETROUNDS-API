@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getCashierTransactionByWeek($data["year"], $data["month"], $data["week"]);
+        $transactions = $report::getCashierTransactionByWeek($data["year"], $data["week"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);

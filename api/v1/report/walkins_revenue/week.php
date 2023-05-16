@@ -12,7 +12,7 @@
         $report = new CashierReport();
 
         // Get user list
-        $revenue = $report::getWeekRevenue($data["year"], $data["month"], $data["week"]);
+        $revenue = $report::getWeekRevenue($data["year"], $data["week"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve week revenue!', $revenue);

@@ -23,11 +23,11 @@
         }
 
         // get revenue report list by week
-        public static function getWeekAverageSale($year, $month, $week) {
+        public static function getWeekAverageSale($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -123,11 +123,11 @@
         }
 
         // get report list by week
-        public static function getCashierTransactionByWeek($year, $month, $week) {
+        public static function getCashierTransactionByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -341,11 +341,11 @@
         }
 
         // get revenue report list by week
-        public static function getWeekRevenue($year, $month, $week) {
+        public static function getWeekRevenue($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -467,11 +467,11 @@
         }
 
         // get report list by week
-        public static function getTransactionByWeek($year, $month, $week) {
+        public static function getTransactionByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

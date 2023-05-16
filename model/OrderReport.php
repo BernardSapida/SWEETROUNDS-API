@@ -35,11 +35,11 @@
         }
 
         // get revenue report list by week
-        public static function getWeekAverageSale($year, $month, $week) {
+        public static function getWeekAverageSale($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM orders WHERE YEAR(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -95,11 +95,11 @@
         }
 
         // get revenue report list by week
-        public static function getWeekCompletedOrders($year, $month, $week) {
+        public static function getWeekCompletedOrders($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT count(*) as completed_transaction FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT count(*) as completed_transaction FROM orders WHERE YEAR(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -155,11 +155,11 @@
         }
 
         // get revenue report list by week
-        public static function getWeekRevenue($year, $month, $week) {
+        public static function getWeekRevenue($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(orders.total) as revenue FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
-            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt = $mysqli->prepare("SELECT SUM(orders.total) as revenue FROM orders WHERE YEAR(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
