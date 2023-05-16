@@ -14,6 +14,106 @@
             return $completed_transaction;
         }
 
+        // get revenue report list by day
+        public static function getDayAverageSale($date) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM orders WHERE DATE(created_at) = ? AND payment_status = 'Completed'");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by week
+        public static function getWeekAverageSale($year, $month, $week) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by month
+        public static function getMonthAverageSale($year, $month) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("ii", $year, $month);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by day
+        public static function getDayCompletedOrders($date) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT count(*) as completed_transaction FROM orders WHERE DATE(created_at) = ? AND payment_status = 'Completed'");
+            $stmt->bind_param("s", $date);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get revenue report list by week
+        public static function getWeekCompletedOrders($year, $month, $week) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT count(*) as completed_transaction FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND WEEK(orders.created_at, 0)=? AND payment_status = 'Completed'");
+            $stmt->bind_param("iii", $year, $month, $week);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // get revenue report list by month
         public static function getMonthCompletedOrders($year, $month) {
             global $mysqli;

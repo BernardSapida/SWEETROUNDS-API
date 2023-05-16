@@ -165,7 +165,25 @@
         public static function loadTop20LowQuantityDonut() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM products ORDER BY quantity ASC LIMIT 20;");
+            $stmt = $mysqli->prepare("SELECT * FROM products WHERE quantity <= 20 ORDER BY quantity;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // load donuts and its total sale DESCENDING
+        public static function loadDonutTotalSale() {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT *, quantity_sold * price as 'Total Sale' FROM products ORDER BY `Total Sale` DESC;");
             $stmt->execute();
             $result = $stmt->get_result();
 

@@ -94,29 +94,50 @@
         ------------------------------------------------------------------------
 
         * Online / Walk In
-        TODO: Number of Transaction - Day
-        TODO: Number of Transaction - Week
+        * Number of Transaction - Day
+        walkin - /api/v1/report/transaction/day.php  => date
+        online - /api/v1/report/online/transaction/day.php => date
 
-        TODO: Number of Transaction - Month
+        * Number of Transaction - Week
+        walkin - /api/v1/report/transaction/week.php => year, month, week
+        online - /api/v1/report/online/transaction/week.php => year, month, week
+
+        * Number of Transaction - Month
+        walkin - /api/v1/report/transaction/month.php  => year, month
         online - /api/v1/report/online/transaction/month.php  => year, month
 
         ! TODO: Number of Transaction - Year
 
         ------------------------------------------------------------------------
 
-        TODO: Average Transaction - Day
-        TODO: Average Transaction - Week
-        TODO: Average Transaction - Month
+        TODO: Average Sale - Day
+        walkin - 
+        online - /api/v1/report/online/transaction/average/day.php
+
+        TODO: Average Sale - Week
+        walkin - 
+        online - /api/v1/report/online/transaction/average/week.php
+
+        TODO: Average Sale - Month
+        walkin - 
+        online - /api/v1/report/online/transaction/average/month.php
+
         ! TODO: Average Transaction - Year
 
-        TODO: New customers of the month
+        * New customers of the month
+        /api/v1/report/customer/new.php
 
         ------------------------------------------------------------------------
 
-        ? Inventory Information
-        TODO: Get all donuts with less than 20 quantity (Low Quantity Donut)
-        TODO: Top 10 Selling Donuts
-        TODO: All donuts with total price sold
+        * Inventory Information
+        * Get all donuts with less than 20 quantity (Low Quantity Donut)
+        /api/v1/report/donut/low_quantity.php
+
+        * Top 10 Selling Donuts
+        /api/v1/report/donut/top_selling.php
+
+        * All donuts with total price sold SORT BY highest sale
+        /api/v1/report/donut/total_sale.php
 
         TODO: Per Cashier Transaction
             TODO: Day
