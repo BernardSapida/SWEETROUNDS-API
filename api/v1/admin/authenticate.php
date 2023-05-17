@@ -19,7 +19,7 @@
             
             if($verifyPassword === true) {
                 // Set status to active
-                $current_admin->setStatus('active');
+                $current_admin->setStatus('Active');
                 $current_admin->save();
                 
                 // Send a response

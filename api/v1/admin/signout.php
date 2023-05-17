@@ -14,7 +14,7 @@
 
         if($current_admin) {
             // Set status to inactive
-            $current_admin->setStatus('inactive');
+            $current_admin->setStatus('Inactive');
             $current_admin->save();
             
             // Send a response

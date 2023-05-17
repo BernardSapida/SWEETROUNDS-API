@@ -163,6 +163,9 @@
         * Card -> Total, discount
         * Print Receipt -> Business Name, Order Number, Contact #, Shop Address, Date of Transaction, Items, Discount, Total
 
+    TODO: Donut/Sold/WalkIn -> Update Transaction Table (Donut Quantity)
+    TODO: Get Donut Sold by Day, Week, Month
+    
     * Important
     ! Error
     ? Questions
