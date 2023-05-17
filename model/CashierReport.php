@@ -525,5 +525,84 @@
 
             return $rows;
         }
+
+        // Day 1-31
+        public static function getProductSoldByDay($day) {
+            global $mysqli;
+            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) as 'Total Sold' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
+            $stmt->bind_param("s", $day);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by week
+        public static function getProductSoldByWeek($year, $week) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) as 'Total Sold' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt->bind_param("ii", $year, $week);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by month
+        public static function getProductSoldByMonth($year, $month) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) as 'Total Sold' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt->bind_param("ii", $year, $month);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // get report list by year
+        public static function getProductSoldByYear($year) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) as 'Total Sold' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=?");
+            $stmt->bind_param("i", $year);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
     }
 ?>

@@ -165,6 +165,8 @@
 
     TODO: Donut/Sold/WalkIn -> Update Transaction Table (Donut Quantity)
     TODO: Get Donut Sold by Day, Week, Month
+
+    TODO: Add donut_quantity in transactions table
     
     * Important
     ! Error
