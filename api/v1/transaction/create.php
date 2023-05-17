@@ -13,6 +13,7 @@
         // Process the data for order
         $transaction->setInvoiceId($data["invoice_id"]);
         $transaction->setItems($data["items"]);
+        $transaction->setDonutQuantity($data["donut_quantity"]);
         $transaction->setNote($data["note"]);
         $transaction->setTax($data["tax"]);
         $transaction->setDiscount($data["discount"]);
