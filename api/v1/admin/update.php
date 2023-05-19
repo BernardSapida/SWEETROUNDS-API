@@ -24,7 +24,7 @@
             $current_admin->setEmployeeFirstname($employee_firstname);
             $current_admin->setEmployeeLastname($employee_lastname);
             $current_admin->setEmail($email);
-            $current_admin->setPassword($password);
+            if($data["password"] != "") $current_admin->setPassword($password);
             $current_admin->setRole($role);
             $current_admin->setStatus($status);
             $current_admin->save();
