@@ -133,16 +133,21 @@
             }
         }
 
-        // search orders 
-        public static function searchTransaction($key) {
+
+
+        // * get transaction items 
+        public static function getTransactionItems($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM transactions 
-            WHERE invoice_id LIKE '%$key%' OR 
-            note LIKE '%$key%' OR
-            tax LIKE '%$key%' OR
-            discount LIKE '%$key%' OR
-            created_at LIKE '%$key%';");
+            $stmt = $mysqli->prepare("SELECT 
+            products.name, 
+            products.flavor, 
+            products.price, 
+            products.image, 
+            transaction_items.quantity 
+            FROM `transaction_items` 
+            LEFT JOIN `products` ON products.id = transaction_items.product_id 
+            WHERE transaction_id=$id;");
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -156,11 +161,60 @@
             return $rows;
         }
 
-        // get transaction list
+        // * search orders 
+        public static function searchTransaction($key) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("SELECT 
+            transactions.invoice_id, 
+            transactions.tax, 
+            transactions.discount, 
+            products.price, 
+            transactions.created_at,
+            SUM(transaction_items.quantity) AS 'quantity', 
+            SUM(transaction_items.quantity * products.price) + transactions.discount - transactions.tax as 'total' 
+            FROM `transaction_items` 
+            LEFT JOIN `transactions` ON transactions.id = transaction_items.transaction_id
+            LEFT JOIN `products` ON products.id = transaction_items.product_id 
+            WHERE CONCAT_WS(' ', transactions.invoice_id, transactions.discount, transactions.tax, transactions.created_at) LIKE '%$key%'
+            GROUP BY transaction_items.transaction_id;");
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // * get transaction list
         public static function getTransactions() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM transactions");
+            $stmt = $mysqli->prepare("SELECT 
+                transactions.id, 
+                transactions.invoice_id, 
+                transactions.note, 
+                transactions.tax, 
+                transactions.discount, 
+                transactions.admin_id, 
+                products.product_number, 
+                products.name, 
+                products.flavor, 
+                products.image, 
+                products.price, 
+                transactions.created_at,
+                SUM(transaction_items.quantity) as 'quantity', 
+                SUM(transaction_items.quantity * products.price) + transactions.discount - transactions.tax as 'total' 
+                FROM `transaction_items` 
+                LEFT JOIN `transactions` ON transactions.id = transaction_items.transaction_id
+                LEFT JOIN `products` ON products.id = transaction_items.product_id 
+                GROUP BY transaction_items.transaction_id;
+            ");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

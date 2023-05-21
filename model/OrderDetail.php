@@ -131,7 +131,7 @@
             $stmt->close();
         }
 
-        // load a order detail from the database by ID
+        // load an order detail from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
