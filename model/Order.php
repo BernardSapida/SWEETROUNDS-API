@@ -197,12 +197,13 @@
                 products.flavor, 
                 products.image,
                 products.availability, 
-                sum(order_items.quantity) as 'quantity', sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
-                FROM order_items
-                LEFT JOIN orders ON orders.id = order_items.order_id
-                LEFT JOIN order_details ON orders.id = order_details.order_id
-                LEFT JOIN products ON products.id = order_items.product_id
-                GROUP BY order_items.product_id;
+                sum(order_items.quantity) as 'total_quantity', 
+                sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
+                FROM `order_items`
+                LEFT JOIN `orders` ON orders.id = order_items.order_id
+                LEFT JOIN `order_details` ON orders.id = order_details.order_id
+                LEFT JOIN `products` ON products.id = order_items.product_id
+                GROUP BY order_items.order_id;
             ");
             $stmt->execute();
             $result = $stmt->get_result();
@@ -326,7 +327,7 @@
                 LEFT JOIN orders ON orders.id = order_items.order_id
                 LEFT JOIN order_details ON orders.id = order_details.order_id
                 LEFT JOIN products ON products.id = order_items.product_id
-                GROUP BY order_items.product_id
+                GROUP BY order_items.order_id
             ) AS result 
             WHERE CONCAT_WS(' ', result.order_number, result.firstname, result.lastname, result.quantity, result.tax, result.shipping_fee, result.discount, result.total, result.payment_status, result.order_status) LIKE '%$key%';");
             $stmt->execute();
@@ -346,11 +347,16 @@
         public static function getUserOrders($userId, $productNumber) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * 
+            $stmt = $mysqli->prepare("SELECT 
+                products.name, 
+                products.flavor, 
+                products.price, 
+                products.image, 
+                order_items.quantity 
                 FROM `orders` 
                 LEFT JOIN `order_items` ON orders.id = order_items.order_id 
                 LEFT JOIN `products` ON products.id = order_items.product_id 
-                WHERE user_id = ? AND order_number=?;
+                WHERE user_id=? AND order_number=?;
             ");
             $stmt->bind_param("is", $userId, $productNumber);
             $stmt->execute();
