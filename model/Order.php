@@ -126,7 +126,7 @@
             // if the order has an ID, update their record in the database
             if ($this->id) {
                 $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, note=?, tax=?, shipping_fee=?, discount=?, payment_status=?, order_status=?, user_id=? WHERE id=?");
-                $stmt->bind_param("ssiiissisi", $this->order_number, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->payment_status, $this->order_status, $this->user_id, $this->id);
+                $stmt->bind_param("ssiiissii", $this->order_number, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->payment_status, $this->order_status, $this->user_id, $this->id);
             }
 
             // otherwise, insert a new record for the order
@@ -170,11 +170,40 @@
             }
         }
 
-        // ! get order list
+        // * get order list
         public static function getOrders() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id");
+            $stmt = $mysqli->prepare("SELECT 
+                order_items.quantity, 
+                orders.order_number, 
+                orders.id, 
+                orders.note, 
+                orders.tax, 
+                orders.shipping_fee, 
+                orders.discount, 
+                orders.order_status, 
+                orders.payment_status, 
+                orders.user_id, 
+                order_details.firstname,
+                order_details.lastname, 
+                order_details.address_line_1, 
+                order_details.address_line_2, 
+                order_details.city, 
+                order_details.contact, 
+                products.price,
+                products.product_number,
+                products.name, 
+                products.flavor, 
+                products.image,
+                products.availability, 
+                sum(order_items.quantity) as 'quantity', sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
+                FROM order_items
+                LEFT JOIN orders ON orders.id = order_items.order_id
+                LEFT JOIN order_details ON orders.id = order_details.order_id
+                LEFT JOIN products ON products.id = order_items.product_id
+                GROUP BY order_items.product_id;
+            ");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -232,18 +261,20 @@
 
         // * get month donut sold
         public static function getMonthDonutSold($year, $month) {
-            return 1;
+            global $mysqli;
 
-            // global $mysqli;
+            $stmt = $mysqli->prepare("SELECT sum(order_items.quantity) as total_sold 
+            FROM order_items 
+            LEFT JOIN products ON products.id = order_items.product_id 
+            INNER JOIN orders ON orders.id = order_items.order_id
+            WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND payment_status = 'Completed';");
+            $stmt->bind_param("ii", $year, $month);
+            $stmt->execute();
+            $stmt->bind_result($donutQuantitySold);
+            $stmt->fetch();
+            $stmt->close();
 
-            // $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) FROM orders WHERE YEAR(created_at)=? AND MONTH(created_at)=?");
-            // $stmt->bind_param("ii", $year, $month);
-            // $stmt->execute();
-            // $stmt->bind_result($donutQuantitySold);
-            // $stmt->fetch();
-            // $stmt->close();
-
-            // return $donutQuantitySold;
+            return $donutQuantitySold;
         }
 
         // ! get month donut sold
@@ -260,16 +291,44 @@
             return $donutQuantitySold;
         }
 
-        // ! search orders 
+        // * search orders 
         public static function searchOrder($key) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id 
-            WHERE order_number LIKE '%$key%' OR 
-            firstname LIKE '%$key%' OR
-            lastname LIKE '%$key%' OR
-            payment_status LIKE '%$key%' OR
-            order_status LIKE '%$key%';");
+            $stmt = $mysqli->prepare("SELECT *
+            FROM (
+                SELECT
+                order_items.quantity, 
+                orders.order_number, 
+                orders.id, 
+                orders.note, 
+                orders.tax, 
+                orders.shipping_fee, 
+                orders.discount, 
+                orders.order_status, 
+                orders.payment_status, 
+                orders.user_id, 
+                order_details.firstname,
+                order_details.lastname, 
+                order_details.address_line_1, 
+                order_details.address_line_2, 
+                order_details.city, 
+                order_details.contact, 
+                products.price,
+                products.product_number,
+                products.name, 
+                products.flavor, 
+                products.image,
+                products.availability,
+                sum(order_items.quantity) as 'total_quantity',
+                sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
+                FROM order_items
+                LEFT JOIN orders ON orders.id = order_items.order_id
+                LEFT JOIN order_details ON orders.id = order_details.order_id
+                LEFT JOIN products ON products.id = order_items.product_id
+                GROUP BY order_items.product_id
+            ) AS result 
+            WHERE CONCAT_WS(' ', result.order_number, result.firstname, result.lastname, result.quantity, result.tax, result.shipping_fee, result.discount, result.total, result.payment_status, result.order_status) LIKE '%$key%';");
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -284,11 +343,16 @@
         }
 
         // ! get user order list
-        public static function getUserOrders($userId) {
+        public static function getUserOrders($userId, $productNumber) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM orders INNER JOIN order_details on orders.order_detail_id = order_details.id WHERE user_id=?");
-            $stmt->bind_param("i", $userId);
+            $stmt = $mysqli->prepare("SELECT * 
+                FROM `orders` 
+                LEFT JOIN `order_items` ON orders.id = order_items.order_id 
+                LEFT JOIN `products` ON products.id = order_items.product_id 
+                WHERE user_id = ? AND order_number=?;
+            ");
+            $stmt->bind_param("is", $userId, $productNumber);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

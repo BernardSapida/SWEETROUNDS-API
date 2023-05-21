@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../../")."/model/CashierReport.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -11,6 +11,7 @@
         // Process the data
         $report = new CashierReport();
 
+
         // Get user list
         $transactions = $report::getTransactionByMonth($data["year"], $data["month"]);
 
@@ -20,7 +21,7 @@
 
     function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'completed_transaction' => $data);
         return json_encode($response);
     }
 ?>

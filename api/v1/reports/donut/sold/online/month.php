@@ -15,7 +15,7 @@
         $donutSold = $order::getMonthDonutSold($data["year"], $data["month"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $donutSold);
+        echo sendResponse(true, 'Successfully retrieve donut total sold report!', $donutSold);
     }
 
     function sendResponse($success, $message, $data = null) {

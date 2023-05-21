@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../../")."/model/OrderReport.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Get the raw POST data
@@ -9,7 +9,7 @@
         $data = json_decode($postData, true);
 
         // Process the data
-        $report = new CashierReport();
+        $report = new OrderReport();
 
         // Get user list
         $transactions = $report::getAllTransactions();

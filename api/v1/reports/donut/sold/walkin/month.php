@@ -15,12 +15,12 @@
         $transactions = $report::getProductSoldByMonth($data["year"], $data["month"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve donut total sold report!', $transactions);
     }
 
     function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'total_sold' => $data);
         return json_encode($response);
     }
 ?>

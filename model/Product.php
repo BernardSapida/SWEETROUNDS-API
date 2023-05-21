@@ -194,7 +194,13 @@
         public static function loadTop10Donut() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM products ORDER BY quantity_sold DESC LIMIT 10;");
+            $stmt = $mysqli->prepare("SELECT 
+                products.id, sum(transaction_items.quantity) AS quantity_sold, products.image, products.name, products.price
+                FROM `transaction_items` LEFT JOIN products ON products.id = transaction_items.product_id 
+                GROUP BY product_id 
+                ORDER BY quantity_sold DESC
+                LIMIT 10;
+            ");
             $stmt->execute();
             $result = $stmt->get_result();
 

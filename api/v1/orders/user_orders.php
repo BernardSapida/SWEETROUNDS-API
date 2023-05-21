@@ -12,7 +12,7 @@
         $order = new Order();
 
         // Get user list
-        $orders = $order::getUserOrders($data["id"]);
+        $orders = $order::getUserOrders($data["user_id"], $data["order_number"]);
 
         // Send a response
         echo sendResponse(true, 'Successfully retrieve user orders!', $orders);
