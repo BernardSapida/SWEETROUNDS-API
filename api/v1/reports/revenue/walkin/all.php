@@ -12,10 +12,10 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getCashierMonthRevenue($data["id"], $data["year"], $data["month"]);
+        $revenue = $report::getAllRevenue();
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve month revenue!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve revenue report!', $revenue);
     }
 
     function sendResponse($success, $message, $data = null) {

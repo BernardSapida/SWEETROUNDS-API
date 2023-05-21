@@ -9,9 +9,10 @@
         private $address_line_2;
         private $city;
         private $contact;
+        private $order_id;
 
         // constructor
-        public function __construct($id = null, $firstname = null, $lastname = null, $address_line_1 = null, $address_line_2 = null, $city = null, $contact = null) {
+        public function __construct($id = null, $firstname = null, $lastname = null, $address_line_1 = null, $address_line_2 = null, $city = null, $contact = null, $order_id = null) {
             $this->id = $id;
             $this->firstname = $firstname;
             $this->lastname = $lastname;
@@ -19,6 +20,7 @@
             $this->address_line_2 = $address_line_2;
             $this->city = $city;
             $this->contact = $contact;
+            $this->order_id = $order_id;
         }
 
         // getters and setters
@@ -50,6 +52,10 @@
             return $this->contact;
         }
 
+        public function getOrderId() {
+            return $this->order_id;
+        }
+
         public function getOrderDetails() {
             $orderDetails = array(
                 "id" => $this->id, 
@@ -59,6 +65,7 @@
                 "address_line_2" => $this->address_line_2, 
                 "city" => $this->city, 
                 "contact" => $this->contact, 
+                "order_id" => $this->order_id, 
             );
 
             return $orderDetails;
@@ -91,6 +98,10 @@
         public function setContact($contact) {
             $this->contact = $contact;
         }
+
+        public function setOrderId($order_id) {
+            $this->order_id = $order_id;
+        }
         
         // save the order detail to the database
         public function save() {
@@ -98,14 +109,14 @@
 
             // if the order detail has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE order_details SET firstname=?, lastname=?, address_line_1=?, address_line_2=?, city=?, contact=? WHERE id=?");
-                $stmt->bind_param("sssssssii", $this->firstname, $this->lastname, $this->address_line_1, $this->address_line_2, $this->city, $this->contact, $this->id);
+                $stmt = $mysqli->prepare("UPDATE order_details SET firstname=?, lastname=?, address_line_1=?, address_line_2=?, city=?, contact=?, order_id=? WHERE id=?");
+                $stmt->bind_param("ssssssii", $this->firstname, $this->lastname, $this->address_line_1, $this->address_line_2, $this->city, $this->contact, $this->order_id, $this->id);
             }
 
             // otherwise, insert a new record for the order detail
             else {
-                $stmt = $mysqli->prepare("INSERT INTO order_details (firstname, lastname, address_line_1, address_line_2, city, contact) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssss", $this->firstname, $this->lastname, $this->address_line_1, $this->address_line_2, $this->city, $this->contact);
+                $stmt = $mysqli->prepare("INSERT INTO order_details (firstname, lastname, address_line_1, address_line_2, city, contact, order_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssssi", $this->firstname, $this->lastname, $this->address_line_1, $this->address_line_2, $this->city, $this->contact, $this->order_id);
             }
 
             // execute the prepared statement
@@ -124,14 +135,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, firstname, lastname, address_line_1, address_line_2, city, contact FROM order_details WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, firstname, lastname, address_line_1, address_line_2, city, contact, order_id FROM order_details WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $firstname, $lastname, $address_line_1, $address_line_2, $city, $contact);
+            $stmt->bind_result($id, $firstname, $lastname, $address_line_1, $address_line_2, $city, $contact, $order_id);
 
             // if the query returned a result, create and return a OrderDetail object
             if ($stmt->fetch()) {
-                $orderInformation = new OrderDetail($id, $firstname, $lastname, $address_line_1, $address_line_2, $city, $contact);
+                $orderInformation = new OrderDetail($id, $firstname, $lastname, $address_line_1, $address_line_2, $city, $contact, $order_id);
                 $stmt->close();
                 return $orderInformation;
             }

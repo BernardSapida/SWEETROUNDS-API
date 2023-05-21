@@ -57,7 +57,7 @@
     }
 
     function validAuthProvider($auth) {
-        $providers = array('credentials', 'google', 'facebook', 'github');
+        $providers = array('Credentials', 'Google', 'Facebook', 'Github');
         
         return in_array($auth, $providers);
     }

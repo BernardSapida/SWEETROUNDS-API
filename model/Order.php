@@ -4,33 +4,25 @@
     class Order {
         private $id;
         private $order_number;
-        private $items;
-        private $donut_quantity;
         private $note;
         private $tax;
         private $shipping_fee;
         private $discount;
-        private $total;
         private $payment_status;
         private $order_status;
         private $user_id;
-        private $order_detail_id;
 
         // constructor
-        public function __construct($id = null, $order_number = null, $items = null, $donut_quantity = null, $note = null, $tax = null, $shipping_fee = null, $discount = null, $total = null, $payment_status = null, $order_status = null,  $user_id = null,  $order_detail_id = null) {
+        public function __construct($id = null, $order_number = null, $note = null, $tax = null, $shipping_fee = null, $discount = null, $payment_status = null, $order_status = null,  $user_id = null) {
             $this->id = $id;
             $this->order_number = $order_number;
-            $this->items = $items;
-            $this->donut_quantity = $donut_quantity;
             $this->note = $note;
             $this->tax = $tax;
             $this->shipping_fee = $shipping_fee;
             $this->discount = $discount;
-            $this->total = $total;
             $this->payment_status = $payment_status;
             $this->order_status = $order_status;
             $this->user_id = $user_id;
-            $this->order_detail_id = $order_detail_id;
         }
 
         // getters and setters
@@ -40,14 +32,6 @@
 
         public function getOrderNumber() {
             return $this->order_number;
-        }
-
-        public function getItems() {
-            return $this->items;
-        }
-
-        public function getDonutQuantity() {
-            return $this->donut_quantity;
         }
 
         public function getNote() {
@@ -66,10 +50,6 @@
             return $this->discount;
         }
 
-        public function getTotal() {
-            return $this->total;
-        }
-
         public function getPaymentStatus() {
             return $this->payment_status;
         }
@@ -86,26 +66,18 @@
             return $this->user_id;
         }
 
-        public function getOrderId() {
-            return $this->order_detail_id;
-        }
-
         public function getOrderHistoryDetails() {
             $orderHistory = array(
                 "id" => $this->id, 
                 "order_number" => $this->order_number, 
-                "items" => $this->items, 
-                "donut_quantity" => $this->donut_quantity, 
                 "note" => $this->note, 
                 "tax" => $this->tax, 
                 "shipping_fee" => $this->shipping_fee, 
                 "discount" => $this->discount, 
-                "total" => $this->total, 
                 "payment_status" => $this->payment_status, 
                 "order_status" => $this->order_status, 
                 "payment_status" => $this->payment_status, 
                 "user_id" => $this->user_id, 
-                "order_detail_id" => $this->order_detail_id, 
             );
 
             return $orderHistory;
@@ -117,14 +89,6 @@
 
         public function setOrderNumber($order_number) {
             $this->order_number = $order_number;
-        }
-
-        public function setItems($items) {
-            $this->items = $items;
-        }
-
-        public function setDonutQuantity($donut_quantity) {
-            $this->donut_quantity = $donut_quantity;
         }
 
         public function setNote($note) {
@@ -143,10 +107,6 @@
             $this->discount = $discount;
         }
 
-        public function setTotal($total) {
-            $this->total = $total;
-        }
-
         public function setOrderStatus($order_status) {
             $this->order_status = $order_status;
         }
@@ -158,10 +118,6 @@
         public function setUserId($user_id) {
             $this->user_id = $user_id;
         }
-
-        public function setUserInfoId($order_detail_id) {
-            $this->order_detail_id = $order_detail_id;
-        }
         
         // save the order to the database
         public function save() {
@@ -169,14 +125,14 @@
 
             // if the order has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, items=?, donut_quantity=?, note=?, tax=?, shipping_fee=?, discount=?, total=?, payment_status=?, order_status=?, user_id=?, order_detail_id=? WHERE id=?");
-                $stmt->bind_param("ssisiiiissisi", $this->order_number, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_detail_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE orders SET order_number=?, note=?, tax=?, shipping_fee=?, discount=?, payment_status=?, order_status=?, user_id=? WHERE id=?");
+                $stmt->bind_param("ssiiissisi", $this->order_number, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->payment_status, $this->order_status, $this->user_id, $this->id);
             }
 
             // otherwise, insert a new record for the order
             else {
-                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, items, donut_quantity, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_detail_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("isisiiiissis", $this->order_number, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->total, $this->payment_status, $this->order_status, $this->user_id, $this->order_detail_id);
+                $stmt = $mysqli->prepare("INSERT INTO orders (order_number, note, tax, shipping_fee, discount, payment_status, order_status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssiiissi", $this->order_number, $this->note, $this->tax, $this->shipping_fee, $this->discount, $this->payment_status, $this->order_status, $this->user_id);
             }
 
             // execute the prepared statement
@@ -195,14 +151,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, order_number, items, donut_quantity, note, tax, shipping_fee, discount, total, payment_status, order_status, user_id, order_detail_id FROM orders WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, order_number, note, tax, shipping_fee, discount, payment_status, order_status, user_id FROM orders WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $order_number, $items, $donut_quantity, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_detail_id);
+            $stmt->bind_result($id, $order_number, $note, $tax, $shipping_fee, $discount, $payment_status, $order_status, $user_id);
 
             // if the query returned a result, create and return a Order History object
             if ($stmt->fetch()) {
-                $order = new Order($id, $order_number, $items, $donut_quantity, $note, $tax, $shipping_fee, $discount, $total, $payment_status, $order_status, $user_id, $order_detail_id);
+                $order = new Order($id, $order_number, $note, $tax, $shipping_fee, $discount, $payment_status, $order_status, $user_id);
                 $stmt->close();
                 return $order;
             }
@@ -214,7 +170,7 @@
             }
         }
 
-        // get order list
+        // ! get order list
         public static function getOrders() {
             global $mysqli;
 
@@ -233,7 +189,7 @@
             return $rows;
         }
 
-        // get all donut sold
+        // ! get all donut sold
         public static function getAllDonutSold() {
             global $mysqli;
 
@@ -246,7 +202,7 @@
             return $donutQuantitySold;
         }
 
-        // get day donut sold
+        // ! get day donut sold
         public static function getDayDonutSold($day) {
             global $mysqli;
 
@@ -260,7 +216,7 @@
             return $donutQuantitySold;
         }
 
-        // get week donut sold
+        // ! get week donut sold
         public static function getWeekDonutSold($year, $month, $week) {
             global $mysqli;
 
@@ -274,21 +230,23 @@
             return $donutQuantitySold;
         }
 
-        // get month donut sold
+        // * get month donut sold
         public static function getMonthDonutSold($year, $month) {
-            global $mysqli;
+            return 1;
 
-            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) FROM orders WHERE YEAR(created_at)=? AND MONTH(created_at)=?");
-            $stmt->bind_param("ii", $year, $month);
-            $stmt->execute();
-            $stmt->bind_result($donutQuantitySold);
-            $stmt->fetch();
-            $stmt->close();
+            // global $mysqli;
 
-            return $donutQuantitySold;
+            // $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) FROM orders WHERE YEAR(created_at)=? AND MONTH(created_at)=?");
+            // $stmt->bind_param("ii", $year, $month);
+            // $stmt->execute();
+            // $stmt->bind_result($donutQuantitySold);
+            // $stmt->fetch();
+            // $stmt->close();
+
+            // return $donutQuantitySold;
         }
 
-        // get month donut sold
+        // ! get month donut sold
         public static function getYearDonutSold($year) {
             global $mysqli;
 
@@ -302,7 +260,7 @@
             return $donutQuantitySold;
         }
 
-        // search orders 
+        // ! search orders 
         public static function searchOrder($key) {
             global $mysqli;
 
@@ -310,8 +268,6 @@
             WHERE order_number LIKE '%$key%' OR 
             firstname LIKE '%$key%' OR
             lastname LIKE '%$key%' OR
-            donut_quantity LIKE '%$key%' OR
-            total LIKE '%$key%' OR
             payment_status LIKE '%$key%' OR
             order_status LIKE '%$key%';");
             $stmt->execute();
@@ -327,7 +283,7 @@
             return $rows;
         }
 
-        // get user order list
+        // ! get user order list
         public static function getUserOrders($userId) {
             global $mysqli;
 

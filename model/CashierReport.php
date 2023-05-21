@@ -360,24 +360,22 @@
             return $rows;
         }
 
-        // get revenue report list by month
+        // * get revenue report by month
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price) as revenue 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
+                WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?;
+            ");
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($revenue);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $revenue;
         }
 
         // get revenue report list by month
@@ -490,7 +488,7 @@
         public static function getTransactionByMonth($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT *, COUNT(*) AS 'transactions' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $result = $stmt->get_result();

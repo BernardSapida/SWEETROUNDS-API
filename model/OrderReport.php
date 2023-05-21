@@ -174,24 +174,22 @@
             return $rows;
         }
 
-        // get revenue report list by month
+        // * get revenue report by month
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(orders.total) as revenue FROM orders WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND payment_status = 'Completed'");
+            $stmt = $mysqli->prepare("SELECT sum(order_items.quantity * products.price) as revenue 
+                FROM order_items 
+                LEFT JOIN products ON products.id = order_items.product_id 
+                INNER JOIN orders ON orders.id = order_items.order_id
+                WHERE YEAR(orders.created_at)=? AND MONTH(orders.created_at)=? AND payment_status = 'Pending';
+            ");
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($revenue);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $revenue;
         }
 
         // get revenue report list by month
@@ -199,12 +197,12 @@
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT
-            MONTH(created_at) AS month,
-            SUM(total) AS revenue
-            FROM orders
-            WHERE YEAR(created_at) = ?
-            GROUP BY MONTH(created_at)
-            ORDER BY MONTH(created_at) ASC");
+                MONTH(created_at) AS month, SUM(total) AS revenue
+                FROM orders
+                WHERE YEAR(created_at) = ?
+                GROUP BY MONTH(created_at)
+                ORDER BY MONTH(created_at) ASC
+            ");
 
             $stmt->bind_param("i", $year);
             $stmt->execute();

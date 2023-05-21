@@ -4,24 +4,18 @@
     class Transaction {
         private $id;
         private $invoice_id;
-        private $items;
-        private $donut_quantity;
         private $note;
         private $tax;
         private $discount;
-        private $total;
         private $admin_id;
 
         // constructor
-        public function __construct($id = null, $invoice_id = null, $items = null, $donut_quantity = null, $note = null, $tax = null, $discount = null, $total = null,  $admin_id = null) {
+        public function __construct($id = null, $invoice_id = null, $note = null, $tax = null, $discount = null,  $admin_id = null) {
             $this->id = $id;
             $this->invoice_id = $invoice_id;
-            $this->items = $items;
-            $this->donut_quantity = $donut_quantity;
             $this->note = $note;
             $this->tax = $tax;
             $this->discount = $discount;
-            $this->total = $total;
             $this->admin_id = $admin_id;
         }
 
@@ -32,14 +26,6 @@
 
         public function getOrderNumber() {
             return $this->invoice_id;
-        }
-
-        public function getItems() {
-            return $this->items;
-        }
-
-        public function getDonutQuantity() {
-            return $this->donut_quantity;
         }
 
         public function getNote() {
@@ -54,10 +40,6 @@
             return $this->discount;
         }
 
-        public function getTotal() {
-            return $this->total;
-        }
-
         public function getAdminId() {
             return $this->admin_id;
         }
@@ -66,13 +48,10 @@
             $transaction = array(
                 "id" => $this->id, 
                 "invoice_id" => $this->invoice_id, 
-                "items" => $this->items, 
-                "donut_quantity" => $this->donut_quantity, 
                 "admin_id" => $this->admin_id, 
                 "note" => $this->note, 
                 "tax" => $this->tax, 
                 "discount" => $this->discount, 
-                "total" => $this->total, 
                 "admin_id" => $this->admin_id, 
             );
 
@@ -87,14 +66,6 @@
             $this->invoice_id = $invoice_id;
         }
 
-        public function setItems($items) {
-            $this->items = $items;
-        }
-
-        public function setDonutQuantity($donut_quantity) {
-            $this->donut_quantity = $donut_quantity;
-        }
-
         public function setNote($note) {
             $this->note = $note;
         }
@@ -107,10 +78,6 @@
             $this->discount = $discount;
         }
 
-        public function setTotal($total) {
-            $this->total = $total;
-        }
-
         public function setAdminId($admin_id) {
             $this->admin_id = $admin_id;
         }
@@ -121,14 +88,14 @@
 
             // if the transaction has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE transactions SET invoice_id, items=?, donut_quantity=?, note=?, tax=?, discount=?, total=?, admin_id=? WHERE id=?");
-                $stmt->bind_param("isisiiiii", $this->invoice_id, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE transactions SET invoice_id, note=?, tax=?, discount=?, admin_id=? WHERE id=?");
+                $stmt->bind_param("ssiiii", $this->invoice_id, $this->note, $this->tax, $this->discount, $this->admin_id, $this->id);
             }
 
             // otherwise, insert a new record for the transaction
             else {
-                $stmt = $mysqli->prepare("INSERT INTO transactions (invoice_id, items, donut_quantity, note, tax, discount, total, admin_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("isisiiii", $this->invoice_id, $this->items, $this->donut_quantity, $this->note, $this->tax, $this->discount, $this->total, $this->admin_id);
+                $stmt = $mysqli->prepare("INSERT INTO transactions (invoice_id, note, tax, discount, admin_id) VALUES (?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssiii", $this->invoice_id, $this->note, $this->tax, $this->discount, $this->admin_id);
             }
 
             // execute the prepared statement
@@ -147,14 +114,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, invoice_id, items, donut_quantity, note, tax, discount, total, admin_id FROM transactions WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, invoice_id, note, tax, discount, admin_id FROM transactions WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $invoice_id, $items, $donut_quantity, $note, $tax, $discount, $total, $admin_id);
+            $stmt->bind_result($id, $invoice_id, $note, $tax, $discount, $admin_id);
 
             // if the query returned a result, create and return a Favorite object
             if ($stmt->fetch()) {
-                $transaction = new Transaction($id, $invoice_id, $items, $donut_quantity, $note, $tax, $discount, $total, $admin_id);
+                $transaction = new Transaction($id, $invoice_id, $note, $tax, $discount, $admin_id);
                 $stmt->close();
                 return $transaction;
             }
@@ -172,11 +139,9 @@
 
             $stmt = $mysqli->prepare("SELECT * FROM transactions 
             WHERE invoice_id LIKE '%$key%' OR 
-            donut_quantity LIKE '%$key%' OR
             note LIKE '%$key%' OR
             tax LIKE '%$key%' OR
             discount LIKE '%$key%' OR
-            total LIKE '%$key%' OR
             created_at LIKE '%$key%';");
             $stmt->execute();
             $result = $stmt->get_result();

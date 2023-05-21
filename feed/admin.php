@@ -28,10 +28,8 @@
                 $admin->setEmail($user['email']);
                 $admin->setPassword($user['password']);
                 $admin->setRole($user['role']);
-                $admin->setStatus("inactive");
+                $admin->setStatus("Offline");
                 $admin->save();
-
-                // createFavorite($user);
 
                 // Send a response
                 echo sendResponse(true, 'Successfully created a new admin account!');
@@ -45,12 +43,5 @@
     function sendResponse($success, $message) {
         $response = array('success' => $success, 'message' => $message);
         return json_encode($response);
-    }
-
-    function createFavorite($user) {
-        $favorite = new Favorite();
-        $favorite->setItems(json_encode(array()));
-        $favorite->setUserId($user->getId());
-        $favorite->save();
     }
 ?>

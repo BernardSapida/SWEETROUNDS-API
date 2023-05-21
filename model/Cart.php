@@ -3,13 +3,13 @@
 
     class Cart {
         private $id;
-        private $items;
+        private $product_id;
         private $user_id;
 
         // constructor
-        public function __construct($id = null, $items = null,  $user_id = null) {
+        public function __construct($id = null, $product_id = null,  $user_id = null) {
             $this->id = $id;
-            $this->items = $items;
+            $this->product_id = $product_id;
             $this->user_id = $user_id;
         }
 
@@ -18,8 +18,8 @@
             return $this->id;
         }
 
-        public function getItems() {
-            return $this->items;
+        public function getProductId() {
+            return $this->product_id;
         }
 
         public function getUserId() {
@@ -29,7 +29,7 @@
         public function getCartDetails() {
             $cart = array(
                 "id" => $this->id, 
-                "items" => $this->items, 
+                "product_id" => $this->product_id, 
                 "user_id" => $this->user_id, 
             );
 
@@ -40,8 +40,8 @@
             $this->id = $id;
         }
 
-        public function setItems($items) {
-            $this->items = $items;
+        public function setProductId($product_id) {
+            $this->product_id = $product_id;
         }
 
         public function setUserId($user_id) {
@@ -54,14 +54,14 @@
 
             // if the cart has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE cart_items SET items=?, user_id=? WHERE id=?");
-                $stmt->bind_param("sii", $this->items, $this->user_id, $this->id);
+                $stmt = $mysqli->prepare("UPDATE cart_items SET product_id=?, user_id=? WHERE id=?");
+                $stmt->bind_param("sii", $this->product_id, $this->user_id, $this->id);
             }
 
             // otherwise, insert a new record for the cart
             else {
-                $stmt = $mysqli->prepare("INSERT INTO cart_items (items, user_id) VALUES (?, ?)");
-                $stmt->bind_param("si", $this->items, $this->user_id);
+                $stmt = $mysqli->prepare("INSERT INTO cart_items (product_id, user_id) VALUES (?, ?)");
+                $stmt->bind_param("si", $this->product_id, $this->user_id);
             }
 
             // execute the prepared statement
@@ -80,14 +80,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, items, user_id FROM cart_items WHERE user_id=?");
+            $stmt = $mysqli->prepare("SELECT id, product_id, user_id FROM cart_items WHERE user_id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $items, $user_id);
+            $stmt->bind_result($id, $product_id, $user_id);
 
             // if the query returned a result, create and return a Cart object
             if ($stmt->fetch()) {
-                $cart = new Cart($id, $items, $user_id);
+                $cart = new Cart($id, $product_id, $user_id);
                 $stmt->close();
                 return $cart;
             }

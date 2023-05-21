@@ -14,8 +14,19 @@
         header('Content-Type: application/json');
 
         foreach($data["data"] as $userOrder) {
-            $orderDetail = new OrderDetail();
             $order = new Order();
+            $orderDetail = new OrderDetail();
+
+            // Process the user order
+            $order->setOrderNumber(getRandomId());
+            $order->setNote($userOrder["note"]);
+            $order->setTax($userOrder["tax"]);
+            $order->setShippingFee($userOrder["shipping_fee"]);
+            $order->setDiscount($userOrder["discount"]);
+            $order->setOrderStatus("Pending");
+            $order->setPaymentStatus("Pending");
+            $order->setUserId($userOrder["user_id"]);
+            $order->save();
 
             // Process the data for order detail
             $orderDetail->setFirstname($userOrder["firstname"]);
@@ -24,24 +35,12 @@
             $orderDetail->setAddressLine2($userOrder["address_line_2"]);
             $orderDetail->setCity($userOrder["city"]);
             $orderDetail->setContact($userOrder["contact"]);
+            $orderDetail->setOrderId($userOrder["user_id"]);
             $orderDetail->save();
 
             $order_detail_id = $orderDetail->getId();
 
-            // Process the user order
-            $order->setOrderNumber(getRandomId());
-            $order->setItems(json_encode($userOrder["items"]));
-            $order->setDonutQuantity($userOrder["donut_quantity"]);
-            $order->setNote($userOrder["note"]);
-            $order->setTax($userOrder["tax"]);
-            $order->setShippingFee($userOrder["shipping_fee"]);
-            $order->setDiscount($userOrder["discount"]);
-            $order->setTotal($userOrder["total"]);
-            $order->setOrderStatus("Pending");
-            $order->setPaymentStatus("Pending");
-            $order->setUserId($userOrder["user_id"]);
-            $order->setUserInfoId($order_detail_id);
-            $order->save();
+            
 
             // Send a response
             echo sendResponse(true, 'Successfully place an order!');

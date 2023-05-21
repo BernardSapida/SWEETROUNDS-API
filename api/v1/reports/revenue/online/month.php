@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../")."/model/OrderReport.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -9,18 +9,18 @@
         $data = json_decode($postData, true);
 
         // Process the data
-        $report = new CashierReport();
+        $report = new OrderReport();
 
         // Get user list
-        $transactions = $report::getCashierTransactionByDay($data["date"]);
+        $revenue = $report::getMonthRevenue($data["year"], $data["month"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve month revenue!', $revenue);
     }
 
     function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'revenue' => $data);
         return json_encode($response);
     }
 ?>

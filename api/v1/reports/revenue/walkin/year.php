@@ -1,5 +1,5 @@
 <?php
-    require_once realpath(dirname(__FILE__) . "/../../../../")."/model/CashierReport.php";
+    require_once realpath(dirname(__FILE__) . "/../../../../../")."/model/CashierReport.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -12,10 +12,10 @@
         $report = new CashierReport();
 
         // Get user list
-        $transactions = $report::getMonthlyRevenue($data["year"]);
+        $revenue = $report::getYearRevenue($data["year"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve monthly revenue!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve year revenue!', $revenue);
     }
 
     function sendResponse($success, $message, $data = null) {

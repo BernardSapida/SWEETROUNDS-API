@@ -12,10 +12,10 @@
         $report = new CashierReport();
 
         // Get user list
-        $revenue = $report::getCashierWeekRevenue($data["id"], $data["year"], $data["month"], $data["week"]);
+        $revenue = $report::getDayRevenue($data["date"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve week revenue!', $revenue);
+        echo sendResponse(true, 'Successfully retrieve day revenue!', $revenue);
     }
 
     function sendResponse($success, $message, $data = null) {
