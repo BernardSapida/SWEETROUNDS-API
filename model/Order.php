@@ -342,7 +342,7 @@
             return $rows;
         }
 
-        // ! get user order list
+        // * get user order list
         public static function getUserOrders($userId, $productNumber) {
             global $mysqli;
 
