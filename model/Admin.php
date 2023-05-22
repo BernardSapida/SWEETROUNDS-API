@@ -9,17 +9,19 @@
         private $email;
         private $password;
         private $role;
-        private $status;
+        private $account_status;
+        private $online_status;
 
         // constructor
-        public function __construct($id = null, $employee_firstname = null, $employee_lastname = null,  $email = null, $password = null, $role = null, $status = null) {
+        public function __construct($id = null, $employee_firstname = null, $employee_lastname = null,  $email = null, $password = null, $role = null, $account_status = null, $online_status = null) {
             $this->id = $id;
             $this->employee_firstname = $employee_firstname;
             $this->employee_lastname = $employee_lastname;
             $this->email = $email;
             $this->password = $password;
             $this->role = $role;
-            $this->status = $status;
+            $this->account_status = $account_status;
+            $this->online_status = $online_status;
         }
 
         // getters and setters
@@ -47,8 +49,12 @@
             return $this->role;
         }
 
-        public function getStatus() {
-            return $this->status;
+        public function getAccountStatus() {
+            return $this->account_status;
+        }
+
+        public function getOnlineStatus() {
+            return $this->online_status;
         }
 
         public function getAdminDetails() {
@@ -59,7 +65,8 @@
                 "email" => $this->email, 
                 "password" => $this->password, 
                 "role" => $this->role, 
-                "status" => $this->status, 
+                "account_status" => $this->account_status, 
+                "online_status" => $this->online_status, 
             );
 
             return $adminDetails;
@@ -90,8 +97,12 @@
             $this->role = $role;
         }
 
-        public function setStatus($status) {
-            $this->status = $status;
+        public function setAccountStatus($account_status) {
+            $this->account_status = $account_status;
+        }
+
+        public function setOnlineStatus($online_status) {
+            $this->online_status = $online_status;
         }
 
         // save the admin to the database
@@ -100,14 +111,14 @@
 
             // if the admin has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE admins SET employee_firstname=?, employee_lastname=?, email=?, password=?, role=?, status=? WHERE id=?");
-                $stmt->bind_param("ssssssi", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->status, $this->id);
+                $stmt = $mysqli->prepare("UPDATE admins SET employee_firstname=?, employee_lastname=?, email=?, password=?, role=?, account_status=?, online_status=? WHERE id=?");
+                $stmt->bind_param("sssssssi", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->account_status, $this->online_status, $this->id);
             }
 
             // otherwise, insert a new record for the admin
             else {
-                $stmt = $mysqli->prepare("INSERT INTO admins (employee_firstname, employee_lastname, email, password, role, status) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssss", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->status);
+                $stmt = $mysqli->prepare("INSERT INTO admins (employee_firstname, employee_lastname, email, password, role, account_status, online_status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("sssssss", $this->employee_firstname, $this->employee_lastname, $this->email, $this->password, $this->role, $this->account_status, $this->online_status);
             }
 
             // execute the prepared statement
@@ -126,14 +137,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, status FROM admins WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, account_status, online_status FROM admins WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $account_status, $online_status);
 
             // if the query returned a result, create and return a Admin object
             if ($stmt->fetch()) {
-                $admin = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+                $admin = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $account_status, $online_status);
                 $stmt->close();
                 return $admin;
             }
@@ -146,17 +157,14 @@
         }
 
         // search admins 
-        public static function searchAdmin($key) {
+        public static function searchAdmin($keyword) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins
-            WHERE employee_firstname LIKE '%$key%' OR 
-            employee_lastname LIKE '%$key%' OR
-            email LIKE '%$key%' OR
-            password LIKE '%$key%' OR
-            role LIKE '%$key%' OR
-            status LIKE '%$key%' OR
-            created_at LIKE '%$key%';");
+            $stmt = $mysqli->prepare(
+                "SELECT * FROM admins
+                WHERE CONCAT_WS(' ', employee_firstname, employee_lastname, email, password, role, account_status, online_status) 
+                LIKE '%$keyword%';"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -174,14 +182,14 @@
         public static function loadByEmail($email) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, status FROM admins WHERE email=?");
+            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, account_status, account_status FROM admins WHERE email=?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
-            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+            $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $account_status, $online_status);
 
             // if the query returned a result, create and return a Admin object
             if ($stmt->fetch()) {
-                $user = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $status);
+                $user = new Admin($id, $employee_firstname, $employee_lastname, $email, $password, $role, $account_status, $online_status);
                 $stmt->close();
                 return $user;
             }

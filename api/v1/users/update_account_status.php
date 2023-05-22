@@ -14,9 +14,9 @@
         $current_user = $user::loadById($data["id"]);
 
         if($current_user) {
-            $status = $data['status'] == "" ? $current_user->getStatus() : $data['status'];
+            $status = $data['account_status'] ?? $current_user->getAccountStatus();
 
-            $current_user->setStatus($status);
+            $current_user->setAccountStatus($status);
             $current_user->save();
     
             // Send a response

@@ -317,7 +317,7 @@
         public static function getDayRevenue($date) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price) as revenue 
+            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
             FROM transaction_items 
             LEFT JOIN products ON products.id = transaction_items.product_id 
             INNER JOIN transactions ON transactions.id = transaction_items.transaction_id 
@@ -354,7 +354,7 @@
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price) as revenue 
+            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
                 FROM transaction_items 
                 LEFT JOIN products ON products.id = transaction_items.product_id 
                 INNER JOIN transactions ON transactions.id = transaction_items.transaction_id

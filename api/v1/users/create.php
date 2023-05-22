@@ -26,7 +26,8 @@
             $user->setEmail($data['email']);
             $user->setPassword($data['password']);
             $user->setAuthProvider($data['auth_provider']);
-            $user->setStatus("inactive");
+            $user->setAccountStatus("Inactive");
+            $user->setOnlineStatus("Offline");
             $user->save();
 
             createFavorite($user);

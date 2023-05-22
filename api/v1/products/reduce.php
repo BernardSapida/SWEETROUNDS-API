@@ -16,7 +16,6 @@
         if($current_product) {
             // Process the data
             $current_product->setQuantity($current_product->getQuantity() - $data["quantity"]);
-            $current_product->setQuantitySold($data["quantity"]);
 
             if($current_product->getQuantity() == 0) {
                 $current_product->setAvailability("Not Available");

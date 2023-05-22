@@ -19,7 +19,7 @@
             echo sendResponse(false, 'Email already exist!');
         } else if($current_user) {
             $current_user->setFullname(($data['firstname']) . " " . $data['lastname']);
-            $current_user->setEmail($data['email'] == "" ? $current_user->getEmail() : $data['email']);
+            $current_user->setEmail($data['email'] ?? $current_user->getEmail());
             $current_user->save();
 
             // Send a response

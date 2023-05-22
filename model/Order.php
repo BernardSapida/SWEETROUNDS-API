@@ -293,7 +293,7 @@
         }
 
         // * search orders 
-        public static function searchOrder($key) {
+        public static function searchOrder($keyword) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT *
@@ -329,7 +329,7 @@
                 LEFT JOIN products ON products.id = order_items.product_id
                 GROUP BY order_items.order_id
             ) AS result 
-            WHERE CONCAT_WS(' ', result.order_number, result.firstname, result.lastname, result.quantity, result.tax, result.shipping_fee, result.discount, result.total, result.payment_status, result.order_status) LIKE '%$key%';");
+            WHERE CONCAT_WS(' ', result.order_number, result.firstname, result.lastname, result.quantity, result.tax, result.shipping_fee, result.discount, result.total, result.payment_status, result.order_status) LIKE '%$keyword%';");
             $stmt->execute();
             $result = $stmt->get_result();
 

@@ -25,7 +25,8 @@
             $admin->setEmail($data['email']);
             $admin->setPassword($data['password']);
             $admin->setRole($data['role']);
-            $admin->setStatus("inactive");
+            $admin->setAccountStatus("Active");
+            $admin->setOnlineStatus("Offline");
             $admin->save();
 
             // createFavorite($user);
@@ -42,12 +43,5 @@
         header('Content-Type: application/json');
         $response = array('success' => $success, 'message' => $message);
         return json_encode($response);
-    }
-
-    function createFavorite($user) {
-        $favorite = new Favorite();
-        $favorite->setItems(json_encode(array()));
-        $favorite->setUserId($user->getId());
-        $favorite->save();
     }
 ?>

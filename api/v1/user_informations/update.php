@@ -15,13 +15,13 @@
 
         // Process the data
         if($user_information) {
-            $firstname = $data["firstname"] == "" ? $user_information->getFirstname() : $data["firstname"];
-            $lastname = $data["lastname"] == "" ? $user_information->getLastname() : $data["lastname"];
-            $email = $data["email"] == "" ? $user_information->getEmail() : $data["email"];
-            $addressLine1 = $data["address_line_1"] == "" ? $user_information->getAddressLine1() : $data["address_line_1"];
-            $addressLine2 = $data["address_line_2"] == "" ? $user_information->getAddressLine2() : $data["address_line_2"];
-            $city = $data["city"] == "" ? $user_information->getCity() : $data["city"];
-            $contact = $data["contact"] == "" ? $user_information->getContact() : $data["contact"];
+            $firstname = $data["firstname"] ?? $user_information->getFirstname();
+            $lastname = $data["lastname"] ?? $user_information->getLastname();
+            $email = $data["email"] ?? $user_information->getEmail();
+            $addressLine1 = $data["address_line_1"] ?? $user_information->getAddressLine1();
+            $addressLine2 = $data["address_line_2"] ?? $user_information->getAddressLine2();
+            $city = $data["city"] ?? $user_information->getCity();
+            $contact = $data["contact"] ?? $user_information->getContact();
 
             $user_information->setFirstname($firstname);
             $user_information->setLastname($lastname);

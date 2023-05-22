@@ -190,7 +190,7 @@
             return $rows;
         }
 
-        // load top 10 donut 
+        // * load top 10 donut 
         public static function loadTop10Donut() {
             global $mysqli;
 
@@ -217,7 +217,22 @@
         public static function getProducts() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM products");
+            $stmt = $mysqli->prepare("SELECT * 
+                FROM `products` AS p
+                LEFT JOIN (
+                    SELECT `product_id`, SUM(quantity_sold) AS 'quantity_sold'
+                    FROM (
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM order_items
+                        GROUP BY `product_id`
+                        UNION ALL
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM transaction_items
+                        GROUP BY `product_id`
+                    ) AS subquery
+                    GROUP BY `product_id`
+                ) AS C ON p.id = C.product_id;
+            ");
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -233,16 +248,28 @@
         }
 
         // search orders 
-        public static function searchProduct($key) {
+        public static function searchProduct($keyword) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM products
-            WHERE product_number LIKE '%$key%' OR 
-            name LIKE '%$key%' OR
-            flavor LIKE '%$key%' OR
-            price LIKE '%$key%' OR
-            quantity LIKE '%$key%' OR
-            availability LIKE '%$key%';");
+            $stmt = $mysqli->prepare(
+                "SELECT * 
+                FROM `products` AS p
+                LEFT JOIN (
+                    SELECT `product_id`, SUM(quantity_sold) AS 'quantity_sold'
+                    FROM (
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM order_items
+                        GROUP BY `product_id`
+                        UNION ALL
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM transaction_items
+                        GROUP BY `product_id`
+                    ) AS subquery
+                    GROUP BY `product_id`
+                ) AS C ON p.id = C.product_id
+                WHERE CONCAT_WS(' ', p.product_number, p.name, p.flavor, p.price, p.quantity, p.availability) 
+                LIKE '%$keyword%';"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
 

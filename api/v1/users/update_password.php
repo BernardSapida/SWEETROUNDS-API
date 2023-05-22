@@ -22,7 +22,7 @@
             } else if(!$validConfirmPassword) {
                 echo sendResponse(false, 'Password and confirm password didn\'t matched!');
             } else {
-                $current_user->setPassword($data['password'] == "" ? $current_user->getPassword() : $data['password']);
+                $current_user->setPassword($data['password'] ?? $current_user->getPassword());
                 $current_user->save();
     
                 // Send a response

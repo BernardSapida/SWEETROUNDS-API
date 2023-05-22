@@ -145,7 +145,7 @@
         public static function getDayRevenue($date) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as revenue 
+            $stmt = $mysqli->prepare("SELECT sum(order_items.quantity * products.price) + orders.tax + orders.shipping_fee - orders.discount as revenue 
                 FROM order_items 
                 LEFT JOIN products ON products.id = order_items.product_id 
                 INNER JOIN orders ON orders.id = order_items.order_id

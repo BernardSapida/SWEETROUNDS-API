@@ -14,19 +14,19 @@
         $current_admin = $admin::loadById($data["id"]);
 
        if($current_admin) {
-            $employee_firstname = $data["employee_firstname"] == "" ? $current_admin->getEmployeeFirstname() : $data["employee_firstname"];
-            $employee_lastname = $data["employee_lastname"] == "" ? $current_admin->getEmployeeLastname() : $data["employee_lastname"];
-            $email = $data["email"] == "" ? $current_admin->getEmail() : $data["email"];
-            $password = $data["password"] == "" ? $current_admin->getPassword() : $data["password"];
-            $role = $data["role"] == "" ? $current_admin->getRole() : $data["role"];
-            $status = $data["status"] == "" ? $current_admin->getStatus() : $data["status"];
+            $employee_firstname = $data["employee_firstname"] ?? $current_admin->getEmployeeFirstname();
+            $employee_lastname = $data["employee_lastname"] ?? $current_admin->getEmployeeLastname();
+            $email = $data["email"] ?? $current_admin->getEmail();
+            $password = $data["password"] ?? $current_admin->getPassword();
+            $role = $data["role"] ?? $current_admin->getRole();
+            $account_status = $data["account_status"];
 
             $current_admin->setEmployeeFirstname($employee_firstname);
             $current_admin->setEmployeeLastname($employee_lastname);
             $current_admin->setEmail($email);
             if($data["password"] != "") $current_admin->setPassword($password);
             $current_admin->setRole($role);
-            $current_admin->setStatus($status);
+            $current_admin->setAccountStatus($account_status);
             $current_admin->save();
 
             // Send a response

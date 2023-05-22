@@ -12,7 +12,7 @@
         $user = new User();
 
         // Get user list
-        $users = $user::searchUser($data["search"]);
+        $users = $user::searchUser($data["keyword"]);
 
         // Send a response
         header('Content-Type: application/json');

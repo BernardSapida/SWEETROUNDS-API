@@ -8,16 +8,18 @@
         private $email;
         private $password;
         private $auth_provider;
-        private $status;
+        private $account_status;
+        private $online_status;
 
         // constructor
-        public function __construct($id = null, $fullname = null,  $email = null, $password = null, $auth_provider = null, $status = null) {
+        public function __construct($id = null, $fullname = null,  $email = null, $password = null, $auth_provider = null, $account_status = null, $online_status = null) {
             $this->id = $id;
             $this->fullname = $fullname;
             $this->email = $email;
             $this->password = $password;
             $this->auth_provider = $auth_provider;
-            $this->status = $status;
+            $this->account_status = $account_status;
+            $this->online_status = $online_status;
         }
 
         // getters and setters
@@ -41,8 +43,12 @@
             return $this->auth_provider;
         }
 
-        public function getStatus() {
-            return $this->status;
+        public function getAccountStatus() {
+            return $this->account_status;
+        }
+
+        public function getOnlineStatus() {
+            return $this->online_status;
         }
 
         public function getUserDetails() {
@@ -52,7 +58,8 @@
                 "email" => $this->email, 
                 "password" => $this->password, 
                 "auth_provider" => $this->auth_provider, 
-                "status" => $this->status, 
+                "account_status" => $this->account_status, 
+                "online_status" => $this->online_status, 
             );
 
             return $userDetails;
@@ -79,8 +86,12 @@
             $this->auth_provider = $auth_provider;
         }
 
-        public function setStatus($status) {
-            $this->status = $status;
+        public function setAccountStatus($account_status) {
+            $this->account_status = $account_status;
+        }
+
+        public function setOnlineStatus($online_status) {
+            $this->online_status = $online_status;
         }
 
         // save the user to the database
@@ -89,14 +100,14 @@
 
             // if the user has an ID, update their record in the database
             if ($this->id) {
-                $stmt = $mysqli->prepare("UPDATE users SET fullname=?, email=?, password=?, auth_provider=?, status=? WHERE id=?");
-                $stmt->bind_param("sssssi", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->status, $this->id);
+                $stmt = $mysqli->prepare("UPDATE users SET fullname=?, email=?, password=?, auth_provider=?, account_status=?, online_status=? WHERE id=?");
+                $stmt->bind_param("ssssssi", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->account_status, $this->online_status, $this->id);
             }
 
             // otherwise, insert a new record for the user
             else {
-                $stmt = $mysqli->prepare("INSERT INTO users (fullname, email, password, auth_provider, status) VALUES (?, ?, ?, ?, ?)");
-                $stmt->bind_param("sssss", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->status);
+                $stmt = $mysqli->prepare("INSERT INTO users (fullname, email, password, auth_provider, status) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("ssssss", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->account_status, $this->online_status);
             }
 
             // execute the prepared statement
@@ -115,14 +126,14 @@
         public static function loadById($id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, status FROM users WHERE id=?");
+            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, account_status, online_status FROM users WHERE id=?");
             $stmt->bind_param("i", $id);
             $stmt->execute();
-            $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $status);
+            $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $account_status, $online_status);
 
             // if the query returned a result, create and return a User object
             if ($stmt->fetch()) {
-                $user = new User($id, $fullname, $email, $password, $auth_provider, $status);
+                $user = new User($id, $fullname, $email, $password, $auth_provider, $account_status, $online_status);
                 $stmt->close();
                 return $user;
             }
@@ -138,14 +149,14 @@
         public static function loadByEmail($email) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, status FROM users WHERE email=?");
+            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, account_status, online_status FROM users WHERE email=?");
             $stmt->bind_param("s", $email);
             $stmt->execute();
-            $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $status);
+            $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $account_status, $online_status);
 
             // if the query returned a result, create and return a User object
             if ($stmt->fetch()) {
-                $user = new User($id, $fullname, $email, $password, $auth_provider, $status);
+                $user = new User($id, $fullname, $email, $password, $auth_provider, $account_status, $online_status);
                 $stmt->close();
                 return $user;
             }
@@ -158,20 +169,16 @@
         }
 
         // search users 
-        public static function searchUser($key) {
+        public static function searchUser($keyword) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM users LEFT JOIN user_informations ON users.id = user_informations.user_id
-            WHERE fullname LIKE '%$key%' OR 
-            users.email LIKE '%$key%' OR
-            password LIKE '%$key%' OR
-            auth_provider LIKE '%$key%' OR
-            address_line_1 LIKE '%$key%' OR
-            address_line_2 LIKE '%$key%' OR
-            city LIKE '%$key%' OR
-            contact LIKE '%$key%' OR
-            status LIKE '%$key%' OR
-            users.created_at LIKE '%$key%';");
+            $stmt = $mysqli->prepare(
+                "SELECT * 
+                FROM users 
+                LEFT JOIN user_informations ON users.id = user_informations.user_id
+                WHERE CONCAT_WS(' ', users.fullname, users.email, users.password, users.auth_provider, user_informations.address_line_1, user_informations.address_line_2, user_informations.city, user_informations.contact, users.account_status, users.online_status, users.created_at) 
+                LIKE '%$keyword%';"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
 

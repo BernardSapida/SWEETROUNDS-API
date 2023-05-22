@@ -12,22 +12,21 @@
 
         // Process the data for order
         $transaction->setInvoiceId($data["invoice_id"]);
-        $transaction->setItems($data["items"]);
-        $transaction->setDonutQuantity($data["donut_quantity"]);
         $transaction->setNote($data["note"]);
         $transaction->setTax($data["tax"]);
         $transaction->setDiscount($data["discount"]);
-        $transaction->setTotal($data["total"]);
         $transaction->setAdminId($data["admin_id"]);
         $transaction->save();
+        
+        $transaction_id = $transaction->getId();
 
         // Send a response
-        echo sendResponse(true, 'Successfully place a transaction!');
+        echo sendResponse(true, 'Successfully place a transaction!', $transaction_id);
     }
 
-    function sendResponse($success, $message) {
+    function sendResponse($success, $message, $transaction_id) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message);
+        $response = array('success' => $success, 'message' => $message, 'transaction_id' => $transaction_id);
         return json_encode($response);
     }
 ?>

@@ -162,7 +162,7 @@
         }
 
         // * search orders 
-        public static function searchTransaction($key) {
+        public static function searchTransaction($keyword) {
             global $mysqli;
 
             $stmt = $mysqli->prepare("SELECT 
@@ -172,11 +172,11 @@
             products.price, 
             transactions.created_at,
             SUM(transaction_items.quantity) AS 'quantity', 
-            SUM(transaction_items.quantity * products.price) + transactions.discount - transactions.tax as 'total' 
+            SUM(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as 'total' 
             FROM `transaction_items` 
             LEFT JOIN `transactions` ON transactions.id = transaction_items.transaction_id
             LEFT JOIN `products` ON products.id = transaction_items.product_id 
-            WHERE CONCAT_WS(' ', transactions.invoice_id, transactions.discount, transactions.tax, transactions.created_at) LIKE '%$key%'
+            WHERE CONCAT_WS(' ', transactions.invoice_id, transactions.discount, transactions.tax, transactions.created_at) LIKE '%$keyword%'
             GROUP BY transaction_items.transaction_id;");
             $stmt->execute();
             $result = $stmt->get_result();
@@ -209,7 +209,7 @@
                 products.price, 
                 transactions.created_at,
                 SUM(transaction_items.quantity) as 'quantity', 
-                SUM(transaction_items.quantity * products.price) + transactions.discount - transactions.tax as 'total' 
+                SUM(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as 'total' 
                 FROM `transaction_items` 
                 LEFT JOIN `transactions` ON transactions.id = transaction_items.transaction_id
                 LEFT JOIN `products` ON products.id = transaction_items.product_id 
