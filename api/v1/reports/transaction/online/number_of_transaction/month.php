@@ -13,15 +13,15 @@
 
 
         // Get user list
-        $revenue = $report::getMonthCompletedOrders($data["year"], $data["month"]);
+        $completed_transaction = $report::getMonthCompletedOrders($data["year"], $data["month"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve month revenue!', $revenue);
+        echo sendResponse(true, 'Successfully retrieve completed transaction report!', $completed_transaction);
     }
 
-    function sendResponse($success, $message, $data = null) {
+    function sendResponse($success, $message, $completed_transaction = 0) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'completed_transaction' => $data);
+        $response = array('success' => $success, 'message' => $message, 'completed_transaction' => $completed_transaction);
         return json_encode($response);
     }
 ?>

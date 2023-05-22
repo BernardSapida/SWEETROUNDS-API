@@ -12,7 +12,7 @@
         $transaction = new Transaction();
 
         // Get user list
-        $transactions = $transaction::searchTransaction($data["search"]);
+        $transactions = $transaction::searchTransaction($data["keyword"]);
 
         // Send a response
         header('Content-Type: application/json');

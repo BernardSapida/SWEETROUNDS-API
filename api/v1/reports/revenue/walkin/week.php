@@ -20,7 +20,7 @@
 
     function sendResponse($success, $message, $data = null) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'revenue' => $data);
         return json_encode($response);
     }
 ?>

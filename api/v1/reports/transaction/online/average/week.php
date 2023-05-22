@@ -12,15 +12,15 @@
         $report = new OrderReport();
 
         // Get user list
-        $transactions = $report::getWeekAverageSale($data["year"], $data["week"]);
+        $average_sale = $report::getWeekAverageSale($data["year"], $data["week"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve average sale report!', $average_sale);
     }
 
-    function sendResponse($success, $message, $data = null) {
+    function sendResponse($success, $message, $average_sale = 0) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'average_sale' => $average_sale);
         return json_encode($response);
     }
 ?>

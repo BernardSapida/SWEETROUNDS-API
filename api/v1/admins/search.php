@@ -12,7 +12,7 @@
         $admin = new Admin();
 
         // Get admin list
-        $admins = $admin::searchAdmin($data["search"]);
+        $admins = $admin::searchAdmin($data["keyword"]);
 
         // Send a response
         header('Content-Type: application/json');

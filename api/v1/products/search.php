@@ -12,7 +12,7 @@
         $product = new Product();
 
         // Get user list
-        $products = $product::searchProduct($data["search"]);
+        $products = $product::searchProduct($data["keyword"]);
 
         // Send a response
         header('Content-Type: application/json');

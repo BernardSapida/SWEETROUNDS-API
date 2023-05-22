@@ -12,15 +12,15 @@
         $report = new OrderReport();
 
         // Get user list
-        $revenue = $report::getMonthAverageSale($data["year"], $data["month"]);
+        $average_sale = $report::getMonthAverageSale($data["year"], $data["month"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve month revenue!', $revenue);
+        echo sendResponse(true, 'Successfully retrieve average sale report!', $average_sale);
     }
 
-    function sendResponse($success, $message, $data = null) {
+    function sendResponse($success, $message, $average_sale = 0) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'data' => $data);
+        $response = array('success' => $success, 'message' => $message, 'average_sale' => $average_sale);
         return json_encode($response);
     }
 ?>

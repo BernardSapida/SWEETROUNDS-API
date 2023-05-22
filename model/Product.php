@@ -176,7 +176,25 @@
         public static function loadDonutTotalSale() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT *, quantity_sold * price as 'Total Sale' FROM products ORDER BY `Total Sale` DESC;");
+            $stmt = $mysqli->prepare(
+                "SELECT *, SUM(C.quantity_sold * p.price) AS 'Total Sale' 
+                FROM `products` AS p
+                LEFT JOIN (
+                    SELECT `product_id`, SUM(quantity_sold) AS 'quantity_sold'
+                    FROM (
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM order_items
+                        GROUP BY `product_id`
+                        UNION ALL
+                        SELECT `product_id`, SUM(quantity) AS 'quantity_sold'
+                        FROM transaction_items
+                        GROUP BY `product_id`
+                    ) AS subquery
+                    GROUP BY `product_id`
+                ) AS C ON p.id = C.product_id
+                GROUP BY p.id
+                ORDER BY `Total Sale` DESC;"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -194,13 +212,13 @@
         public static function loadTop10Donut() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT 
-                products.id, sum(transaction_items.quantity) AS quantity_sold, products.image, products.name, products.price
+            $stmt = $mysqli->prepare(
+                "SELECT products.id, sum(transaction_items.quantity) AS quantity_sold, products.image, products.name, products.price
                 FROM `transaction_items` LEFT JOIN products ON products.id = transaction_items.product_id 
                 GROUP BY product_id 
                 ORDER BY quantity_sold DESC
-                LIMIT 10;
-            ");
+                LIMIT 10;"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
 
@@ -217,7 +235,8 @@
         public static function getProducts() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * 
+            $stmt = $mysqli->prepare(
+                "SELECT * 
                 FROM `products` AS p
                 LEFT JOIN (
                     SELECT `product_id`, SUM(quantity_sold) AS 'quantity_sold'
@@ -231,8 +250,8 @@
                         GROUP BY `product_id`
                     ) AS subquery
                     GROUP BY `product_id`
-                ) AS C ON p.id = C.product_id;
-            ");
+                ) AS C ON p.id = C.product_id;"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

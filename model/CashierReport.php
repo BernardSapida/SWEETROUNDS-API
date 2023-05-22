@@ -2,64 +2,63 @@
     require_once dirname(__DIR__)."/utils/database.php";
 
     class CashierReport {
-        // get revenue report list by day
+        // * get revenue report list by day
         public static function getDayAverageSale($date) {
             global $mysqli;
-
-            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at) = ?");
+            
+            $stmt = $mysqli->prepare(
+                "SELECT AVG(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as 'average_sale' 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
+                WHERE DATE(transactions.created_at)=?"
+            );
             $stmt->bind_param("s", $date);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($average_sale);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $average_sale;
         }
 
-        // get revenue report list by week
+        // * get revenue report list by week
         public static function getWeekAverageSale($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
-            $stmt->bind_param("ii", $year, $week);
+            $stmt = $mysqli->prepare(
+                "SELECT AVG(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as 'average_sale' 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
+                WHERE YEAR(transactions.created_at)=? AND 
+                WEEK(transactions.created_at, 0)=?"
+            );
+            $stmt->bind_param("ss", $year, $week);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($average_sale);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $average_sale;
         }
 
-        // get revenue report list by month
+        // * get revenue report list by month
         public static function getMonthAverageSale($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT AVG(total) as 'Average Sale' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
-            $stmt->bind_param("ii", $year, $month);
+            $stmt = $mysqli->prepare(
+                "SELECT AVG(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as 'average_sale' 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
+                WHERE YEAR(transactions.created_at)=? AND 
+                MONTH(transactions.created_at)=?"
+            );
+            $stmt->bind_param("ss", $year, $month);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($average_sale);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $average_sale;
         }
 
         // * get number of transactions
@@ -99,7 +98,7 @@
         public static function getCashierTransactionByDay($day) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
             $stmt->bind_param("s", $day);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -119,7 +118,7 @@
         public static function getCashierTransactionByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
             $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -139,7 +138,7 @@
         public static function getCashierTransactionByMonth($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS occurrence FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -317,11 +316,13 @@
         public static function getDayRevenue($date) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
-            FROM transaction_items 
-            LEFT JOIN products ON products.id = transaction_items.product_id 
-            INNER JOIN transactions ON transactions.id = transaction_items.transaction_id 
-            WHERE DATE(transactions.created_at) = ?");
+            $stmt = $mysqli->prepare(
+                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id 
+                WHERE DATE(transactions.created_at) = ?"
+            );
             $stmt->bind_param("s", $date);
             $stmt->execute();
             $stmt->bind_result($revenue);
@@ -334,32 +335,34 @@
         public static function getWeekRevenue($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id 
+                WHERE YEAR(transactions.created_at)=? AND 
+                WEEK(transactions.created_at, 0)=?"
+            );
             $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($revenue);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $revenue;
         }
 
         // * get revenue by month
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+            $stmt = $mysqli->prepare(
+                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
                 FROM transaction_items 
                 LEFT JOIN products ON products.id = transaction_items.product_id 
                 INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
-                WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?;
-            ");
+                WHERE YEAR(transactions.created_at)=? AND 
+                MONTH(transactions.created_at)=?;"
+            );
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $stmt->bind_result($revenue);
@@ -368,17 +371,19 @@
             return $revenue;
         }
 
-        // get revenue report list by month
+        // * get revenue by monthly
         public static function getMonthlyRevenue($year) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT
-            MONTH(created_at) AS month,
-            SUM(total) AS revenue
-            FROM transactions
-            WHERE YEAR(created_at) = ?
-            GROUP BY MONTH(created_at)
-            ORDER BY MONTH(created_at) ASC");
+            $stmt = $mysqli->prepare(
+                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+                FROM transaction_items 
+                LEFT JOIN products ON products.id = transaction_items.product_id 
+                INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
+                WHERE YEAR(transactions.created_at)=?
+                GROUP BY MONTH(transactions.created_at)
+                ORDER BY MONTH(transactions.created_at) ASC;"
+            );
 
             $stmt->bind_param("i", $year);
             $stmt->execute();
@@ -434,51 +439,50 @@
             return $rows;
         }
 
-        // get report list by day
-        // Day 1-31
+        // * get number of transaction by day
         public static function getTransactionByDay($day) {
             global $mysqli;
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT COUNT(*) AS completed_transaction 
+                FROM transactions
+                WHERE DATE(transactions.created_at)=?"
+            );
             $stmt->bind_param("s", $day);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($completed_transaction);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $completed_transaction;
         }
 
         // get report list by week
         public static function getTransactionByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT * FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT COUNT(*) AS completed_transaction 
+                FROM transactions
+                WHERE YEAR(transactions.created_at)=? AND
+                WEEK(transactions.created_at, 0)=?"
+            );
             $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
-            $result = $stmt->get_result();
-            $stmt->close();
+            $stmt->bind_result($completed_transaction);
+            $stmt->fetch();
 
-            $rows = array();
-
-            // Add each record in result to rows
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-
-            return $rows;
+            return $completed_transaction;
         }
 
         // * get completed transaction by month
         public static function getTransactionByMonth($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT COUNT(*) AS completed_transaction FROM transactions WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT COUNT(*) AS completed_transaction
+                FROM transactions
+                WHERE YEAR(transactions.created_at)=? AND 
+                MONTH(transactions.created_at)=?"
+            );
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $stmt->bind_result($completed_transaction);

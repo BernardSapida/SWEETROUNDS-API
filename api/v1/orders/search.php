@@ -12,7 +12,7 @@
         $order = new Order();
 
         // Get user list
-        $orders = $order::searchOrder($data["search"]);
+        $orders = $order::searchOrder($data["keyword"]);
 
         // Send a response
         header('Content-Type: application/json');

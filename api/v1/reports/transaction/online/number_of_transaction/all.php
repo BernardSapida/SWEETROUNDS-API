@@ -12,15 +12,15 @@
         $report = new OrderReport();
 
         // Get user list
-        $transactions = $report::getAllTransactions();
+        $completed_transaction = $report::getAllTransactions();
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve report transactions!', $transactions);
+        echo sendResponse(true, 'Successfully retrieve completed transaction report!', $completed_transaction);
     }
 
-    function sendResponse($success, $message, $data = null) {
+    function sendResponse($success, $message, $completed_transaction = 0) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message, 'number_of_transaction' => $data);
+        $response = array('success' => $success, 'message' => $message, 'number_of_transaction' => $completed_transaction);
         return json_encode($response);
     }
 ?>
