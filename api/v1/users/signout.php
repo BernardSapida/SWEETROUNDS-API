@@ -14,7 +14,7 @@
 
         if($current_user) {
             // Set status to inactive
-            $current_user->setStatus('inactive');
+            $current_user->setOnlineStatus('Offline');
             $current_user->save();
             
             // Send a response

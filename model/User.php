@@ -106,7 +106,7 @@
 
             // otherwise, insert a new record for the user
             else {
-                $stmt = $mysqli->prepare("INSERT INTO users (fullname, email, password, auth_provider, status) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt = $mysqli->prepare("INSERT INTO users (fullname, email, password, auth_provider, account_status, online_status) VALUES (?, ?, ?, ?, ?, ?)");
                 $stmt->bind_param("ssssss", $this->fullname, $this->email, $this->password, $this->auth_provider, $this->account_status, $this->online_status);
             }
 

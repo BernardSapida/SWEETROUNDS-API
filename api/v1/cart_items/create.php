@@ -1,6 +1,6 @@
 <?php
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Cart.php";
+    require_once realpath(dirname(__FILE__) . "/../../../")."/model/CartItems.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
@@ -8,17 +8,15 @@
 
         // Decode the JSON data into an associative array
         $data = json_decode($postData, true);
-
-        $cart = new Cart();
-        $user_id = $data['id'];
-        $user_cart = $cart->loadById($user_id);
+        $cart = new CartItems();
 
         // Process the data
-        $user_cart->setItems(json_encode($data["items"]));
-        $user_cart->save();
+        $cart->setProductId($data["product_id"]);
+        $cart->setUserId($data["user_id"]);
+        $cart->save();
 
         // Send a response
-        echo sendResponse(true, 'Successfully update cart!');
+        echo sendResponse(true, 'Successfully added donut to cart!');
     }
 
     function sendResponse($success, $message) {

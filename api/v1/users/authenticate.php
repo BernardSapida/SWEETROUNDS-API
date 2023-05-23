@@ -19,7 +19,7 @@
 
             if($verifyPassword === true) {
                 // Set status to active
-                $current_user->setStatus('active');
+                $current_user->setOnlineStatus('Online');
                 $current_user->save();
 
                 // Send a response

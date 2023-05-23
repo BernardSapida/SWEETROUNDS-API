@@ -30,9 +30,7 @@
             $user->setOnlineStatus("Offline");
             $user->save();
 
-            createFavorite($user);
             createUserInformation($data['firstname'], $data['lastname'], $user);
-            createCart($user);
 
             // Send a response
             echo sendResponse(true, 'Successfully created a new account!');
@@ -48,13 +46,6 @@
         return json_encode($response);
     }
 
-    function createFavorite($user) {
-        $favorite = new Favorite();
-        $favorite->setItems(json_encode(array()));
-        $favorite->setUserId($user->getId());
-        $favorite->save();
-    }
-
     function createUserInformation($firstname, $lastname, $user) {
         $UI = new UserInformation();
         $UI->setFirstname($firstname);
@@ -62,12 +53,5 @@
         $UI->setEmail($user->getEmail());
         $UI->setUserId($user->getId());
         $UI->save();
-    }
-
-    function createCart($user) {
-        $cart = new Cart();
-        $cart->setItems(json_encode(array()));
-        $cart->setUserId($user->getId());
-        $cart->save();
     }
 ?>

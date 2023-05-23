@@ -118,6 +118,16 @@
         }
 
         // delete the favorite from the database
+        public function deleteFavoriteDonut($id) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("DELETE FROM favorites WHERE id=?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        // delete the favorite from the database
         public function delete() {
             global $mysqli;
 

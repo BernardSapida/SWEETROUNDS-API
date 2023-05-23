@@ -1,7 +1,7 @@
 <?php
     require_once dirname(__DIR__)."/utils/database.php";
 
-    class Cart {
+    class CartItems {
         private $id;
         private $product_id;
         private $user_id;
@@ -87,7 +87,7 @@
 
             // if the query returned a result, create and return a Cart object
             if ($stmt->fetch()) {
-                $cart = new Cart($id, $product_id, $user_id);
+                $cart = new CartItems($id, $product_id, $user_id);
                 $stmt->close();
                 return $cart;
             }
@@ -97,6 +97,16 @@
                 $stmt->close();
                 return null;
             }
+        }
+
+        // delete the cart from the database
+        public function deleteCartDonut($id) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare("DELETE FROM cart_items WHERE id=?");
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $stmt->close();
         }
 
         // delete the cart from the database
