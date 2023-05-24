@@ -308,6 +308,49 @@
             return $rows;
         }
 
+        public static function getUserFavorites($id) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare(
+                "SELECT * FROM (SELECT 
+                    P.id AS 'product_id', 
+                    P.product_number, 
+                    P.name, 
+                    P.flavor, 
+                    P.price, 
+                    P.quantity, 
+                    P.image, 
+                    P.availability, 
+                    F.id AS 'favorite_id', 
+                    C.id AS 'cart_id',
+                CASE
+                    WHEN F.product_id IS NULL THEN FALSE
+                    ELSE TRUE
+                END AS 'in_favorite',
+                CASE
+                    WHEN C.product_id IS NULL THEN FALSE
+                    ELSE TRUE
+                END AS 'in_cart'
+                FROM products AS P
+                LEFT JOIN (SELECT product_id, id FROM favorites WHERE user_id = ?) AS F ON P.id = F.product_id
+                LEFT JOIN (SELECT product_id, id FROM cart_items WHERE cart_items.user_id = ?) AS C ON P.id = C.product_id) AS A
+                WHERE A.in_favorite = 1;"
+            );
+            $stmt->bind_param("ii", $id, $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
         // search orders 
         public static function searchProduct($keyword) {
             global $mysqli;

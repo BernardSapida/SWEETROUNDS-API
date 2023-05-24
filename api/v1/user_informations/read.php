@@ -10,7 +10,7 @@
 
         // Process the data
         $user = new UserInformation();
-        $current_user = $user::loadById($data["id"]);
+        $current_user = $user::loadById($data["user_id"]);
 
         if($current_user) {
             // Get user information

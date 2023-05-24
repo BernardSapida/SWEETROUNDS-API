@@ -198,7 +198,7 @@
                 products.image,
                 products.availability, 
                 sum(order_items.quantity) as 'total_quantity', 
-                sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
+                sum(order_items.quantity * products.price + orders.tax + orders.shipping_fee - orders.discount) as 'total'
                 FROM `order_items`
                 LEFT JOIN `orders` ON orders.id = order_items.order_id
                 LEFT JOIN `order_details` ON orders.id = order_details.order_id
@@ -322,7 +322,7 @@
                 products.image,
                 products.availability,
                 sum(order_items.quantity) as 'total_quantity',
-                sum(order_items.quantity * products.price) + orders.discount - (orders.tax + orders.shipping_fee) as 'total'
+                sum(order_items.quantity * products.price) + orders.tax + orders.shipping_fee - orders.discount as 'total'
                 FROM order_items
                 LEFT JOIN orders ON orders.id = order_items.order_id
                 LEFT JOIN order_details ON orders.id = order_details.order_id
@@ -344,10 +344,11 @@
         }
 
         // * get user order list
-        public static function getUserOrders($userId, $productNumber) {
+        public static function getUserOrders($userId, $order_id) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT 
+            $stmt = $mysqli->prepare(
+                "SELECT 
                 products.name, 
                 products.flavor, 
                 products.price, 
@@ -356,9 +357,43 @@
                 FROM `orders` 
                 LEFT JOIN `order_items` ON orders.id = order_items.order_id 
                 LEFT JOIN `products` ON products.id = order_items.product_id 
-                WHERE user_id=? AND order_number=?;
+                WHERE user_id=? AND order_id=?;
             ");
-            $stmt->bind_param("is", $userId, $productNumber);
+            $stmt->bind_param("is", $userId, $order_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+
+            $rows = array();
+
+            // Add each record in result to rows
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // * get user order history
+        public static function getOrderHistory($userId) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare(
+                "SELECT 
+                order_items.order_id,
+                order_number, 
+                orders.order_status, 
+                orders.payment_status, 
+                SUM(order_items.quantity) as 'quantity', 
+                SUM(products.price * order_items.quantity) + orders.tax + orders.shipping_fee - orders.discount as 'total', 
+                orders.created_at
+                FROM orders
+                LEFT JOIN order_items ON orders.id = order_items.order_id
+                LEFT JOIN products ON products.id = order_items.product_id
+                WHERE orders.user_id = ?
+                GROUP BY order_items.order_id;
+            ");
+            $stmt->bind_param("i", $userId);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();

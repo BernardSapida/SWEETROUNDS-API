@@ -10,14 +10,14 @@
         $data = json_decode($postData, true);
         $cart = new CartItems();
 
+        $user_cart = $cart->loadById($data["cart_id"]);
+
         // Process the data
-        $cart->setQuantity(1);
-        $cart->setProductId($data["product_id"]);
-        $cart->setUserId($data["user_id"]);
-        $cart->save();
+        $user_cart->setQuantity($data["quantity"]);
+        $user_cart->save();
 
         // Send a response
-        echo sendResponse(true, 'Successfully added donut to cart!');
+        echo sendResponse(true, 'Successfully updated donut to cart!');
     }
 
     function sendResponse($success, $message) {

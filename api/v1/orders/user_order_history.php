@@ -12,10 +12,10 @@
         $order = new Order();
 
         // Get user list
-        $orders = $order::getUserOrders($data["user_id"], $data["order_id"]);
+        $orders = $order::getOrderHistory($data["user_id"]);
 
         // Send a response
-        echo sendResponse(true, 'Successfully retrieve user orders!', $orders);
+        echo sendResponse(true, 'Successfully retrieve orders history!', $orders);
     }
 
     function sendResponse($success, $message, $data = null) {

@@ -13,6 +13,19 @@
         $orderDetail = new OrderDetail();
         $order = new Order();
 
+        // Process the data for order
+        $order->setOrderNumber(getRandomId());
+        $order->setNote($data["note"]);
+        $order->setTax($data["tax"]);
+        $order->setShippingFee($data["shipping_fee"]);
+        $order->setDiscount($data["discount"]);
+        $order->setOrderStatus("Pending");
+        $order->setPaymentStatus("Pending");
+        $order->setUserId($data["user_id"]);
+        $order->save();
+
+        $order_id = $order->getId();
+
         // Process the data for order detail
         $orderDetail->setFirstname($data["firstname"]);
         $orderDetail->setLastname($data["lastname"]);
@@ -20,33 +33,18 @@
         $orderDetail->setAddressLine2($data["address_line_2"]);
         $orderDetail->setCity($data["city"]);
         $orderDetail->setContact($data["contact"]);
+        $orderDetail->setOrderId($order_id);
         $orderDetail->save();
 
         $order_detail_id = $orderDetail->getId();
 
-
-        // Process the data for order
-        $order->setOrderNumber(getRandomId());
-        $order->setItems($data["items"]);
-        $order->setDonutQuantity($data["donut_quantity"]);
-        $order->setNote($data["note"]);
-        $order->setTax($data["tax"]);
-        $order->setShippingFee($data["shipping_fee"]);
-        $order->setDiscount($data["discount"]);
-        $order->setTotal($data["total"]);
-        $order->setOrderStatus("Pending");
-        $order->setPaymentStatus("Pending");
-        $order->setUserId($data["user_id"]);
-        $order->setUserInfoId($order_detail_id);
-        $order->save();
-
         // Send a response
-        echo sendResponse(true, 'Successfully place an order!');
+        echo sendResponse(true, 'Successfully place an order!', $order_id);
     }
 
-    function sendResponse($success, $message) {
+    function sendResponse($success, $message, $order_id) {
         header('Content-Type: application/json');
-        $response = array('success' => $success, 'message' => $message);
+        $response = array('success' => $success, 'message' => $message, 'order_id' => $order_id);
         return json_encode($response);
     }
 ?>

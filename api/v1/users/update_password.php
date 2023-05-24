@@ -12,7 +12,7 @@
 
         // Process the data
         $user = new User();
-        $current_user = $user::loadById($data["id"]);
+        $current_user = $user::loadById($data["user_id"]);
         $validPassword = validPassword($data["password"]);
         $validConfirmPassword = validPasswordConfirmation($data["password"], $data["confirmPassword"]);
 
