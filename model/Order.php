@@ -198,7 +198,7 @@
                 products.image,
                 products.availability, 
                 sum(order_items.quantity) as 'total_quantity', 
-                sum(order_items.quantity * products.price + orders.tax + orders.shipping_fee - orders.discount) as 'total'
+                sum(order_items.quantity * products.price) + orders.tax + orders.shipping_fee - orders.discount as 'total'
                 FROM `order_items`
                 LEFT JOIN `orders` ON orders.id = order_items.order_id
                 LEFT JOIN `order_details` ON orders.id = order_details.order_id
