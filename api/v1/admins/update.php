@@ -17,7 +17,7 @@
             $employee_firstname = $data["employee_firstname"] ?? $current_admin->getEmployeeFirstname();
             $employee_lastname = $data["employee_lastname"] ?? $current_admin->getEmployeeLastname();
             $email = $data["email"] ?? $current_admin->getEmail();
-            $password = $data["password"] ?? $current_admin->getPassword();
+            $password = $data["password"];
             $role = $data["role"] ?? $current_admin->getRole();
             $account_status = $data["account_status"];
 

@@ -182,7 +182,11 @@
         public static function loadByEmail($email) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, employee_firstname, employee_lastname, email, password, role, account_status, account_status FROM admins WHERE email=?");
+            $stmt = $mysqli->prepare(
+                "SELECT id, employee_firstname, employee_lastname, email, password, role, account_status, online_status 
+                FROM `admins` 
+                WHERE email=?"
+            );
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $stmt->bind_result($id, $employee_firstname, $employee_lastname, $email, $password, $role, $account_status, $online_status);
