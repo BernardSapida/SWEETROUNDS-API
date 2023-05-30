@@ -391,7 +391,8 @@
                 LEFT JOIN order_items ON orders.id = order_items.order_id
                 LEFT JOIN products ON products.id = order_items.product_id
                 WHERE orders.user_id = ?
-                GROUP BY order_items.order_id;
+                GROUP BY order_items.order_id
+                ORDER BY orders.created_at DESC;
             ");
             $stmt->bind_param("i", $userId);
             $stmt->execute();

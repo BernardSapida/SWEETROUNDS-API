@@ -149,7 +149,11 @@
         public static function loadByEmail($email) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT id, fullname, email, password, auth_provider, account_status, online_status FROM users WHERE email=?");
+            $stmt = $mysqli->prepare(
+                "SELECT id, fullname, email, password, auth_provider, account_status, online_status 
+                FROM users 
+                WHERE email=?"
+            );
             $stmt->bind_param("s", $email);
             $stmt->execute();
             $stmt->bind_result($id, $fullname, $email, $password, $auth_provider, $account_status, $online_status);

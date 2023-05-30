@@ -2,9 +2,7 @@
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/validation/create_user.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Favorite.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/UserInformation.php";
-    require_once realpath(dirname(__FILE__) . "/../../../")."/model/Cart.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
