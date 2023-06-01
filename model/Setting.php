@@ -38,6 +38,7 @@
             return $this->shipping_fee;
         }
 
+        // ***
         public function getSettingDetails() {
             $setting = array(
                 "id" => $this->id, 
@@ -98,7 +99,7 @@
             $stmt->close();
         }
 
-        // load a setting from the database by ID
+        // *** load a setting from the database by ID
         public static function loadById($id) {
             global $mysqli;
 

@@ -14,7 +14,7 @@
             return $completed_transaction;
         }
 
-        // get revenue report list by day
+        // *** get revenue report list by day
         public static function getDayAverageSale($date) {
             global $mysqli;
 
@@ -34,7 +34,7 @@
             return $average_sale;
         }
 
-        // get revenue report list by week
+        // *** get revenue report list by week
         public static function getWeekAverageSale($year, $week) {
             global $mysqli;
 
@@ -55,7 +55,7 @@
             return $average_sale;
         }
 
-        // get revenue report list by month
+        // *** get revenue report list by month
         public static function getMonthAverageSale($year, $month) {
             global $mysqli;
 
@@ -74,7 +74,7 @@
             return $average_sale;
         }
 
-        // * get completed orders by day
+        // *** get completed orders by day
         public static function getDayCompletedOrders($date) {
             global $mysqli;
 
@@ -92,7 +92,7 @@
             return $completed_transaction;
         }
 
-        // * get completed orders by week
+        // *** get completed orders by week
         public static function getWeekCompletedOrders($year, $week) {
             global $mysqli;
 
@@ -111,7 +111,7 @@
             return $completed_transaction;
         }
 
-        // * get completed orders by month
+        // *** get completed orders by month
         public static function getMonthCompletedOrders($year, $month) {
             global $mysqli;
 
@@ -130,7 +130,7 @@
             return $completed_transaction;
         }
 
-        // * get number of transaction
+        // *** get number of transaction
         public static function getAllTransactions() {
             global $mysqli;
 
@@ -146,7 +146,7 @@
             return $number_of_transaction;
         }
 
-        // * get revenue report by day
+        // *** get revenue report by day
         public static function getDayRevenue($date) {
             global $mysqli;
 
@@ -165,7 +165,7 @@
             return $revenue;
         }
 
-        // * get revenue report list by week
+        // *** get revenue report list by week
         public static function getWeekRevenue($year, $week) {
             global $mysqli;
 
@@ -186,7 +186,7 @@
             return $revenue;
         }
 
-        // * get revenue report by month
+        // *** get revenue report by month
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
@@ -206,7 +206,7 @@
             return $revenue;
         }
 
-        // * get revenue by monthly
+        // *** get revenue by monthly
         public static function getMonthlyRevenue($year) {
             global $mysqli;
 

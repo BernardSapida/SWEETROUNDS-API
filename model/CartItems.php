@@ -87,7 +87,7 @@
             $stmt->close();
         }
 
-        // load a cart from the database by ID
+        // *** load a cart from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
@@ -110,6 +110,7 @@
             }
         }
 
+        // ***
         public static function getUserCarts($id) {
             global $mysqli;
 
@@ -154,7 +155,7 @@
             return $rows;
         }
 
-        // delete the cart from the database
+        // *** delete the cart from the database
         public function deleteCartDonut($id) {
             global $mysqli;
 

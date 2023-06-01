@@ -135,7 +135,7 @@
 
 
 
-        // * get transaction items 
+        // *** get transaction items 
         public static function getTransactionItems($id) {
             global $mysqli;
 
@@ -161,7 +161,7 @@
             return $rows;
         }
 
-        // * search orders 
+        // *** search orders 
         public static function searchTransaction($keyword) {
             global $mysqli;
 
@@ -191,7 +191,7 @@
             return $rows;
         }
 
-        // * get transaction list
+        // *** get transaction list
         public static function getTransactions() {
             global $mysqli;
 

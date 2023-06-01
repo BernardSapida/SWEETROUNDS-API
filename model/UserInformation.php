@@ -62,6 +62,7 @@
             return $this->user_id;
         }
 
+        // ***
         public function getUserInformation() {
             $userInformation = array(
                 "id" => $this->id, 

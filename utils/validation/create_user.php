@@ -48,6 +48,7 @@
         }
     }
 
+    // ***
     function validPasswordConfirmation($password, $confirmPassword) {
         return $password === $confirmPassword;
     }

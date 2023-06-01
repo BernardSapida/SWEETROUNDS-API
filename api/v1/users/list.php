@@ -2,7 +2,7 @@
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/User.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Process the data
+        //! Process the data
         $user = new User();
 
         // Get user list

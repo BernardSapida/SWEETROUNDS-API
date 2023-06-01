@@ -105,7 +105,7 @@
             $this->online_status = $online_status;
         }
 
-        // save the admin to the database
+        // *** save the admin to the database
         public function save() {
             global $mysqli;
 
@@ -133,7 +133,7 @@
             $stmt->close();
         }
 
-        // load a admin from the database by ID
+        // *** load a admin from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
@@ -156,7 +156,7 @@
             }
         }
 
-        // search admins 
+        // *** search admins 
         public static function searchAdmin($keyword) {
             global $mysqli;
 
@@ -178,7 +178,7 @@
             return $rows;
         }
 
-        // load a user from the database by email
+        // *** load a user from the database by email
         public static function loadByEmail($email) {
             global $mysqli;
 
@@ -205,7 +205,7 @@
             }
         }
 
-        // get admin list
+        // *** get admin list
         public static function getAdmins() {
             global $mysqli;
 

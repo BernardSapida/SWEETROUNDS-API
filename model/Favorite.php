@@ -117,7 +117,7 @@
             return $rows;
         }
 
-        // delete the favorite from the database
+        // *** delete the favorite from the database
         public function deleteFavoriteDonut($id) {
             global $mysqli;
 

@@ -2,6 +2,7 @@
     require_once realpath(dirname(__FILE__) . "/../../../")."/utils/database.php";
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/Contact.php";
     
+    // ***
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Get the raw POST data
         $postData = file_get_contents('php://input');

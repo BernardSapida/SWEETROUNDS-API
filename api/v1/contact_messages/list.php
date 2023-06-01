@@ -3,6 +3,7 @@
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/Contact.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // !
         $contact = new Contact();
         
         // Get list of messages

@@ -51,6 +51,7 @@
             return $this->online_status;
         }
 
+        // getUserDetails
         public function getUserDetails() {
             $userDetails = array(
                 "id" => $this->id, 
@@ -122,7 +123,7 @@
             $stmt->close();
         }
 
-        // load a user from the database by ID
+        // *** load a user from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
@@ -145,7 +146,7 @@
             }
         }
 
-        // load a user from the database by email
+        // *** load a user from the database by email
         public static function loadByEmail($email) {
             global $mysqli;
 
@@ -172,7 +173,7 @@
             }
         }
 
-        // search users 
+        // *** search users 
         public static function searchUser($keyword) {
             global $mysqli;
 
@@ -196,7 +197,7 @@
             return $rows;
         }
 
-        // get user list
+        // *** get user list
         public static function getUsers() {
             global $mysqli;
 
@@ -215,7 +216,7 @@
             return $rows;
         }
 
-        // get list of new users of the month
+        // *** get list of new users of the month
         public static function getNewUsers() {
             global $mysqli;
 

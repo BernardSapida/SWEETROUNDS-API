@@ -2,7 +2,7 @@
     require_once realpath(dirname(__FILE__) . "/../../../")."/model/Admin.php";
     
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Process the data
+        //! Process the data
         $admin = new Admin();
 
         // Get user list

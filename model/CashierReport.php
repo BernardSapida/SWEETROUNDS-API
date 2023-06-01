@@ -2,7 +2,7 @@
     require_once dirname(__DIR__)."/utils/database.php";
 
     class CashierReport {
-        // * get revenue report list by day
+        // *** get revenue report list by day
         public static function getDayAverageSale($date) {
             global $mysqli;
             
@@ -21,7 +21,7 @@
             return $average_sale;
         }
 
-        // * get revenue report list by week
+        // *** get revenue report list by week
         public static function getWeekAverageSale($year, $week) {
             global $mysqli;
 
@@ -41,7 +41,7 @@
             return $average_sale;
         }
 
-        // * get revenue report list by month
+        // *** get revenue report list by month
         public static function getMonthAverageSale($year, $month) {
             global $mysqli;
 
@@ -61,7 +61,7 @@
             return $average_sale;
         }
 
-        // * get number of transactions
+        // *** get number of transactions
         public static function getAllTransactions() {
             global $mysqli;
 
@@ -93,12 +93,27 @@
             return $rows;
         }
 
-        // get report list by day
+        // *** get report list by day
         // Day 1-31
         public static function getCashierTransactionByDay($day) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE DATE(transactions.created_at)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT *, SUM(s.total_sale) AS total_sale, count(*) AS total_transaction FROM
+                (
+                    SELECT r.transaction_id, r.admin_id, r.employee_firstname, r.employee_lastname, r.email, r.role, r.tax, r.discount, sum(transaction_items.quantity * products.price + r.tax - r.discount) AS total_sale FROM
+                    (
+                        SELECT transactions.id AS transaction_id, admins.id as admin_id, employee_firstname, employee_lastname, email, role, tax, discount
+                        FROM admins
+                        LEFT JOIN transactions ON admins.id = transactions.admin_id 
+                        WHERE DATE(transactions.created_at)=?
+                    ) AS r
+                    LEFT JOIN transaction_items ON r.transaction_id = transaction_items.transaction_id
+                    LEFT JOIN products ON products.id = transaction_items.product_id
+                    GROUP BY r.transaction_id
+                ) AS s
+                GROUP BY s.admin_id"
+            );
             $stmt->bind_param("s", $day);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -114,11 +129,26 @@
             return $rows;
         }
 
-        // get report list by week
+        // *** get report list by week
         public static function getCashierTransactionByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT *, SUM(s.total_sale) AS total_sale, count(*) AS total_transaction FROM
+                (
+                    SELECT r.transaction_id, r.admin_id, r.employee_firstname, r.employee_lastname, r.email, r.role, r.tax, r.discount, sum(transaction_items.quantity * products.price + r.tax - r.discount) AS total_sale FROM
+                    (
+                        SELECT transactions.id AS transaction_id, admins.id as admin_id, employee_firstname, employee_lastname, email, role, tax, discount
+                        FROM admins
+                        LEFT JOIN transactions ON admins.id = transactions.admin_id 
+                        WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?
+                    ) AS r
+                    LEFT JOIN transaction_items ON r.transaction_id = transaction_items.transaction_id
+                    LEFT JOIN products ON products.id = transaction_items.product_id
+                    GROUP BY r.transaction_id
+                ) AS s
+                GROUP BY s.admin_id"
+            );
             $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -134,11 +164,26 @@
             return $rows;
         }
 
-        // get report list by month
+        // *** get report list by month
         public static function getCashierTransactionByMonth($year, $month) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT admins.id, employee_firstname, employee_lastname, email, role, COUNT(*) AS number_of_transaction FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT *, SUM(s.total_sale) AS total_sale, count(*) AS total_transaction FROM
+                (
+                    SELECT r.transaction_id, r.admin_id, r.employee_firstname, r.employee_lastname, r.email, r.role, r.tax, r.discount, sum(transaction_items.quantity * products.price + r.tax - r.discount) AS total_sale FROM
+                    (
+                        SELECT transactions.id AS transaction_id, admins.id as admin_id, employee_firstname, employee_lastname, email, role, tax, discount
+                        FROM admins
+                        LEFT JOIN transactions ON admins.id = transactions.admin_id 
+                        WHERE YEAR(transactions.created_at)=? AND MONTH(transactions.created_at)=?
+                    ) AS r
+                    LEFT JOIN transaction_items ON r.transaction_id = transaction_items.transaction_id
+                    LEFT JOIN products ON products.id = transaction_items.product_id
+                    GROUP BY r.transaction_id
+                ) AS s
+                GROUP BY s.admin_id"
+            );
             $stmt->bind_param("ii", $year, $month);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -178,7 +223,10 @@
         public static function getCashierAllRevenue() {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(transactions.total) as revenue FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id");
+            $stmt = $mysqli->prepare(
+                "SELECT SUM(transactions.total) as revenue 
+                FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id"
+            );
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
@@ -312,7 +360,7 @@
             return $rows;
         }
 
-        // * get revenue by day
+        // *** get revenue by day
         public static function getDayRevenue($date) {
             global $mysqli;
 
@@ -331,7 +379,7 @@
             return $revenue;
         }
 
-        // get revenue report list by week
+        // *** get revenue report list by week
         public static function getWeekRevenue($year, $week) {
             global $mysqli;
 
@@ -351,7 +399,7 @@
             return $revenue;
         }
 
-        // * get revenue by month
+        // *** get revenue by month
         public static function getMonthRevenue($year, $month) {
             global $mysqli;
 
@@ -371,7 +419,7 @@
             return $revenue;
         }
 
-        // * get revenue by monthly
+        // *** get revenue by monthly
         public static function getMonthlyRevenue($year) {
             global $mysqli;
 
@@ -439,7 +487,7 @@
             return $rows;
         }
 
-        // * get number of transaction by day
+        // *** get number of transaction by day
         public static function getTransactionByDay($day) {
             global $mysqli;
             $stmt = $mysqli->prepare(
@@ -455,7 +503,7 @@
             return $completed_transaction;
         }
 
-        // get report list by week
+        // *** get report list by week
         public static function getTransactionByWeek($year, $week) {
             global $mysqli;
 
@@ -473,7 +521,7 @@
             return $completed_transaction;
         }
 
-        // * get completed transaction by month
+        // *** get completed transaction by month
         public static function getTransactionByMonth($year, $month) {
             global $mysqli;
 
@@ -534,7 +582,11 @@
         public static function getProductSoldByWeek($year, $week) {
             global $mysqli;
 
-            $stmt = $mysqli->prepare("SELECT SUM(donut_quantity) as 'Total Sold' FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?");
+            $stmt = $mysqli->prepare(
+                "SELECT SUM(donut_quantity) as 'Total Sold' 
+                FROM admins LEFT JOIN transactions ON admins.id = transactions.admin_id 
+                WHERE YEAR(transactions.created_at)=? AND WEEK(transactions.created_at, 0)=?"
+            );
             $stmt->bind_param("ii", $year, $week);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -550,7 +602,7 @@
             return $rows;
         }
 
-        // * get donut total sold by month
+        // *** get donut total sold by month
         public static function getProductSoldByMonth($year, $month) {
             global $mysqli;
 

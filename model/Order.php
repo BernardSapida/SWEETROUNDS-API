@@ -147,7 +147,7 @@
             $stmt->close();
         }
 
-        // load a order from the database by ID
+        // *** load a order from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
@@ -170,7 +170,7 @@
             }
         }
 
-        // * get order list
+        // *** get order list
         public static function getOrders() {
             global $mysqli;
 
@@ -260,7 +260,7 @@
             return $donutQuantitySold;
         }
 
-        // * get month donut sold
+        // *** get month donut sold
         public static function getMonthDonutSold($year, $month) {
             global $mysqli;
 
@@ -292,7 +292,7 @@
             return $donutQuantitySold;
         }
 
-        // * search orders 
+        // *** search orders 
         public static function searchOrder($keyword) {
             global $mysqli;
 
@@ -343,7 +343,7 @@
             return $rows;
         }
 
-        // * get user order list
+        // *** get user order list
         public static function getUserOrders($userId, $order_id) {
             global $mysqli;
 
@@ -374,7 +374,7 @@
             return $rows;
         }
 
-        // * get user order history
+        // *** get user order history
         public static function getOrderHistory($userId) {
             global $mysqli;
 

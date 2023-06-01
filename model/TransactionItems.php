@@ -2,6 +2,7 @@
     require_once dirname(__DIR__)."/utils/database.php";
 
     class TransactionItems {
+        // !
         private $id;
         private $quantity;
         private $transaction_id;

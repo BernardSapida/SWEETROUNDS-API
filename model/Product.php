@@ -131,7 +131,7 @@
             $stmt->close();
         }
 
-        // load a product from the database by ID
+        // *** load a product from the database by ID
         public static function loadById($id) {
             global $mysqli;
 
@@ -154,7 +154,7 @@
             }
         }
 
-        // load top 20 low quantity donut
+        // *** load top 20 low quantity donut
         public static function loadTop20LowQuantityDonut() {
             global $mysqli;
 
@@ -172,7 +172,7 @@
             return $rows;
         }
 
-        // load donuts and its total sale DESCENDING
+        // *** load donuts and its total sale DESCENDING
         public static function loadDonutTotalSale() {
             global $mysqli;
 
@@ -208,7 +208,7 @@
             return $rows;
         }
 
-        // * load top 10 donut 
+        // *** load top 10 donut 
         public static function loadTop10Donut() {
             global $mysqli;
 
@@ -232,6 +232,7 @@
             return $rows;
         }
 
+        // ***
         public static function getProducts() {
             global $mysqli;
 
@@ -266,6 +267,7 @@
             return $rows;
         }
 
+        // ***
         public static function getProductsForUser($id) {
             global $mysqli;
 
@@ -308,6 +310,7 @@
             return $rows;
         }
 
+        // ***
         public static function getUserFavorites($id) {
             global $mysqli;
 
@@ -351,6 +354,7 @@
             return $rows;
         }
 
+        // ***
         public static function searchUserProductByKeyword($id, $keyword) {
             global $mysqli;
 
@@ -395,7 +399,7 @@
             return $rows;
         }
 
-        // search orders 
+        // *** search orders 
         public static function searchProduct($keyword) {
             global $mysqli;
 

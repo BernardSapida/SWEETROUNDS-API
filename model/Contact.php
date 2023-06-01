@@ -121,6 +121,29 @@
             }
         }
 
+        // *** search orders 
+        public static function searchMessage($keyword) {
+            global $mysqli;
+
+            $stmt = $mysqli->prepare(
+                "SELECT * 
+                FROM `contact_messages`
+                WHERE CONCAT_WS(' ', name, email, subject, message) 
+                LIKE '%$keyword%';"
+            );
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $rows = array();
+
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+
+        // ***
         public static function getMessages() {
             global $mysqli;
 

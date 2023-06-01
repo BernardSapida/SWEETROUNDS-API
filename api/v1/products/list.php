@@ -5,7 +5,7 @@
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $product = new Product();
 
-        // Get list of products
+        //! Get list of products
         $products = $product->getProducts();
 
         // Send a response
