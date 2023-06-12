@@ -404,7 +404,7 @@
             global $mysqli;
 
             $stmt = $mysqli->prepare(
-                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+                "SELECT sum(transaction_items.quantity * products.price) + transactions.tax - transactions.discount as revenue 
                 FROM transaction_items 
                 LEFT JOIN products ON products.id = transaction_items.product_id 
                 INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
@@ -424,7 +424,7 @@
             global $mysqli;
 
             $stmt = $mysqli->prepare(
-                "SELECT sum(transaction_items.quantity * products.price + transactions.tax - transactions.discount) as revenue 
+                "SELECT sum(transaction_items.quantity * products.price) + transactions.tax - transactions.discount as revenue 
                 FROM transaction_items 
                 LEFT JOIN products ON products.id = transaction_items.product_id 
                 INNER JOIN transactions ON transactions.id = transaction_items.transaction_id
