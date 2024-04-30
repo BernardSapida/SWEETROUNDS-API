@@ -26,7 +26,7 @@
                 echo sendResponse(true, 'Successfully signed in!', $current_user->getUserDetails());
             } else {
                 // Send a response
-                echo sendResponse(true, 'Password is incorrect!');
+                echo sendResponse(false, 'Password is incorrect!');
             }
         } else {
             // Send a response
