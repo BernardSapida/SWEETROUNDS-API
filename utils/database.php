@@ -1,8 +1,12 @@
 <?php
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
     $servername = "localhost";
-    $username = "nhxrkwzg_sweetrounds";
-    $password = "@Sweetrounds123";
-    $database = "nhxrkwzg_sweetrounds";
+    $username = "krwxaicr_sweetrounds";
+    $password = "qDLYEML3stNvFtQczNPZ";
+    $database = "krwxaicr_sweetrounds";
 
     // connect to the database
     $mysqli = new mysqli($servername, $username, $password, $database);
